@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Arithmetic<T extends Node> extends Node {
+public abstract class Arithmetic<T extends GeneticNode> extends GeneticNode {
     abstract protected char[] getAllowedOperationTypes();
     abstract protected T getGenerated();
 
@@ -24,17 +24,16 @@ public abstract class Arithmetic<T extends Node> extends Node {
     }
 
     @Override
-    public Node generateChild() {
+    public GeneticNode generateChild() {
         Random rng = new Random();
         if (rng.nextBoolean()) {
             return appendRandomOperation();
         } else {
-            return appendRandomOperation();
-            //return expandRandomOperation();
+            return expandRandomOperation();
         }
     }
 
-    private Node appendRandomOperation() {
+    private GeneticNode appendRandomOperation() {
         Random rng = new Random();
         char operationType = allowedOperationTypes[rng.nextInt(allowedOperationTypes.length)];
         T operationRhs = getGenerated();
@@ -42,7 +41,7 @@ public abstract class Arithmetic<T extends Node> extends Node {
         return operationRhs;
     }
 
-    private Node expandRandomOperation() {
+    private GeneticNode expandRandomOperation() {
         Random rng = new Random();
         int nodeIdx = rng.nextInt(1 + operations.size());
         if (nodeIdx == 0) {

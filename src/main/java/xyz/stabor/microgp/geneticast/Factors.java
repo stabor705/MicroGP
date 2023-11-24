@@ -11,7 +11,7 @@ public class Factors {
 
     static private Random rng = new Random();
 
-    static public class Number extends LiteralNode<Integer> {
+    static public class Number extends LiteralGeneticNode<Integer> {
         public Number() {
             super(rng.nextInt());
         }
@@ -19,12 +19,8 @@ public class Factors {
         public Number(Integer num) {
             super(num);
         }
-        public static Node generate() {
-            Random rng = new Random();
-            return new Number(rng.nextInt());
-        }
     }
-    static public class Bool extends LiteralNode<Boolean> {
+    static public class Bool extends LiteralGeneticNode<Boolean> {
         public Bool() {
             super(rng.nextBoolean());
         }
@@ -32,7 +28,7 @@ public class Factors {
             super(data);
         }
     }
-    static public class Identifier extends LiteralNode<String> {
+    static public class Identifier extends LiteralGeneticNode<String> {
         public Identifier() {
             super(UUID.randomUUID().toString().substring(0, 8));
         }
@@ -40,7 +36,7 @@ public class Factors {
             super(data);
         }
     }
-    static public class NestedExpression extends Node {
+    static public class NestedExpression extends GeneticNode {
         private Expression expression;
 
         public NestedExpression() {
@@ -48,7 +44,7 @@ public class Factors {
         }
 
         @Override
-        public Node generateChild() {
+        public GeneticNode generateChild() {
             return expression.generateChild();
         }
 
@@ -58,7 +54,7 @@ public class Factors {
         }
     }
 
-    static public Node generateRandom() {
+    static public GeneticNode generateRandom() {
         return factorsUnion.generateRandom();
     }
 }

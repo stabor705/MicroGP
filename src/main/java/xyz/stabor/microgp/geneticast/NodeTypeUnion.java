@@ -10,7 +10,7 @@ public class NodeTypeUnion {
 
     public NodeTypeUnion(List<Class<?>> nodeTypeClasses) {
         for (Class<?> nodeTypeClass : nodeTypeClasses) {
-            assert nodeTypeClass.isAssignableFrom(Node.class);
+            assert nodeTypeClass.isAssignableFrom(GeneticNode.class);
             try {
                 nodeTypeClass.getConstructor();
             } catch (NoSuchMethodException e) {
@@ -21,13 +21,13 @@ public class NodeTypeUnion {
         this.nodeTypeClasses = nodeTypeClasses;
     }
 
-    public Node generateRandom() {
+    public GeneticNode generateRandom() {
         Random rng = new Random();
         int roll = rng.nextInt(nodeTypeClasses.size());
         Class<?> nodeTypeClass = nodeTypeClasses.get(roll);
         try {
             Constructor<?> nodeTypeClassConstructor = nodeTypeClass.getConstructor();
-            return (Node)nodeTypeClassConstructor.newInstance();
+            return (GeneticNode)nodeTypeClassConstructor.newInstance();
         } catch (Exception e) {
             System.err.println("Could not instantiate random node type: " + e);
         }

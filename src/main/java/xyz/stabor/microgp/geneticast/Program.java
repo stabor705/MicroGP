@@ -1,23 +1,36 @@
 package xyz.stabor.microgp.geneticast;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.StringJoiner;
 
-class Program extends Node {
-    private List<Node> statements;
-    private static NodeTypeUnion statementUnion = new NodeTypeUnion(List.of(Assignment.class, If.class));
-
+public class Program extends GeneticNode {
+    private List<GeneticNode> statements = new ArrayList<>();
+    private Random rng = new Random();
     @Override
-    public Node generateChild() {
-        Node node = statementUnion.generateRandom();
-        statements.add(node);
-        return node;
+    public GeneticNode generateChild() {
+        if (rng.nextBoolean() && !statements.isEmpty()) {
+            return expandRandomStatement();
+        } else {
+            return addNewStatement();
+        }
+    }
+
+    private GeneticNode expandRandomStatement() {
+        return statements.get(rng.nextInt(statements.size())).generateChild();
+    }
+
+    private GeneticNode addNewStatement() {
+        GeneticNode geneticNode = Statements.generateRandom();
+        statements.add(geneticNode);
+        return geneticNode;
     }
 
     @Override
     public String getText() {
         StringJoiner joiner = new StringJoiner("");
-        for (Node statement : statements) {
+        for (GeneticNode statement : statements) {
             joiner.add(statement.getText());
         }
         return joiner.toString();

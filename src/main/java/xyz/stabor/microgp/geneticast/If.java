@@ -5,13 +5,19 @@ import lombok.AllArgsConstructor;
 import java.util.Random;
 
 @AllArgsConstructor
-class If extends Node {
-    private Node condition;
-    private Node trueBlock;
-    private Node falseBlock;
+class If extends GeneticNode {
+    private GeneticNode condition;
+    private Block trueBlock;
+    private Block falseBlock;
+
+    public If() {
+        this.condition = Conditions.generateRandom();
+        this.trueBlock = new Block();
+        this.falseBlock = new Block();
+    }
 
     @Override
-    public Node generateChild() {
+    public GeneticNode generateChild() {
         Random rng = new Random();
         if (rng.nextBoolean()) {
             return trueBlock.generateChild();
@@ -25,9 +31,10 @@ class If extends Node {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("if");
         stringBuilder.append(condition.getText());
+        stringBuilder.append("\n");
         stringBuilder.append(trueBlock.getText());
         if (falseBlock != null) {
-            stringBuilder.append("else");
+            stringBuilder.append("else\n");
             stringBuilder.append(falseBlock);
         }
         return stringBuilder.toString();

@@ -1,7 +1,7 @@
 package xyz.stabor.microgp.geneticast;
 
 public class GeneticAST {
-    private Node root;
+    private GeneticNode root;
 
     public GeneticAST() {
         this.root = new Program();
@@ -13,7 +13,7 @@ public class GeneticAST {
         return ast;
     }
 
-    private Node generate(Node node, int height) {
-        return generate(node.generateChild(), height - 1);
+    private GeneticNode generate(GeneticNode geneticNode, int height) {
+        return generate(geneticNode.generateChild(), height - 1);
     }
 }

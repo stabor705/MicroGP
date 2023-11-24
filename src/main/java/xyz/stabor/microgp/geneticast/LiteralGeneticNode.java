@@ -3,11 +3,11 @@ package xyz.stabor.microgp.geneticast;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class LiteralNode<T> extends Node {
+public class LiteralGeneticNode<T> extends GeneticNode {
     private T data;
 
     @Override
-    public Node generateChild() {
+    public GeneticNode generateChild() {
         return null;
     }
 

@@ -1,11 +1,11 @@
 package xyz.stabor.microgp.geneticast;
 
-public class Term extends Arithmetic<Node> {
+public class Term extends Arithmetic<GeneticNode> {
     public Term() {
         super(Factors.generateRandom());
     }
 
-    public Term(Node left) {
+    public Term(GeneticNode left) {
         super(left);
     }
 
@@ -15,7 +15,7 @@ public class Term extends Arithmetic<Node> {
     }
 
     @Override
-    protected Node getGenerated() {
+    protected GeneticNode getGenerated() {
         return Factors.generateRandom();
     }
 }

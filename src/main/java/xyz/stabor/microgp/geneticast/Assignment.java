@@ -3,12 +3,17 @@ package xyz.stabor.microgp.geneticast;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-class Assignment extends Node {
-    private String identifier;
+class Assignment extends GeneticNode {
+    private Factors.Identifier identifier;
     private Expression expression;
 
+    public Assignment() {
+        this.identifier = new Factors.Identifier();
+        this.expression = new Expression();
+    }
+
     @Override
-    public Node generateChild() {
+    public GeneticNode generateChild() {
         return expression.generateChild();
     }
 
