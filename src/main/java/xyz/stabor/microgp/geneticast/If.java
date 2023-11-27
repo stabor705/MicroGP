@@ -1,41 +1,29 @@
 package xyz.stabor.microgp.geneticast;
 
-import lombok.AllArgsConstructor;
-
+import java.util.List;
 import java.util.Random;
 
-@AllArgsConstructor
-class If extends GeneticNode {
-    private GeneticNode condition;
-    private Block trueBlock;
-    private Block falseBlock;
-
-    public If() {
-        this.condition = Conditions.generateRandom();
-        this.trueBlock = new Block();
-        this.falseBlock = new Block();
+public class If extends GeneticNode {
+    public static final int minHeight = 4;
+    protected If(List<GeneticNode> children) {
+        super(children);
     }
 
-    @Override
-    public GeneticNode generateChild() {
+    public static If generate(GenerationContext ctx) {
         Random rng = new Random();
         if (rng.nextBoolean()) {
-            return trueBlock.generateChild();
+            return new If(List.of(Conditions.generate(ctx.deeper()), Block.generate(ctx.deeper()), Block.generate(ctx.deeper())));
         } else {
-            return falseBlock.generateChild();
+            return new If(List.of(Conditions.generate(ctx.deeper()), Block.generate(ctx.deeper())));
         }
     }
 
     @Override
-    public String getText() {
+    protected String getTemplate() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("if");
-        stringBuilder.append(condition.getText());
-        stringBuilder.append("\n");
-        stringBuilder.append(trueBlock.getText());
-        if (falseBlock != null) {
-            stringBuilder.append("else\n");
-            stringBuilder.append(falseBlock);
+        stringBuilder.append("if %s %s");
+        if (children.size() > 2) {
+            stringBuilder.append("else %s");
         }
         return stringBuilder.toString();
     }

@@ -7,7 +7,7 @@ public class Statements {
             Assignment.class, If.class, While.class, Print.class, Read.class, Block.class
     ));
 
-    public static GeneticNode generateRandom() {
-        return statements.generateRandom();
+    public static GeneticNode generate(GenerationContext ctx) {
+        return statements.generate(ctx);
     }
 }

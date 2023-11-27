@@ -1,8 +1,9 @@
 package xyz.stabor.microgp.geneticast;
 
-import java.lang.reflect.Constructor;
-import java.util.List;
-import java.util.Random;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public class NodeTypeUnion {
     private List<Class<?>> nodeTypeClasses;
@@ -11,25 +12,44 @@ public class NodeTypeUnion {
     public NodeTypeUnion(List<Class<?>> nodeTypeClasses) {
         for (Class<?> nodeTypeClass : nodeTypeClasses) {
             assert nodeTypeClass.isAssignableFrom(GeneticNode.class);
-            try {
-                nodeTypeClass.getConstructor();
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("Every Node subclass has to have empty constructor: " + e);
-            }
-        }
 
+            ensureGenerateMethodPresent(nodeTypeClass);
+            getMinHeight(nodeTypeClass);
+        }
         this.nodeTypeClasses = nodeTypeClasses;
     }
 
-    public GeneticNode generateRandom() {
-        Random rng = new Random();
-        int roll = rng.nextInt(nodeTypeClasses.size());
-        Class<?> nodeTypeClass = nodeTypeClasses.get(roll);
+    static private void ensureGenerateMethodPresent(Class<?> nodeTypeClass) {
         try {
-            Constructor<?> nodeTypeClassConstructor = nodeTypeClass.getConstructor();
-            return (GeneticNode)nodeTypeClassConstructor.newInstance();
+            Method generateMethod = nodeTypeClass.getMethod("generate", GenerationContext.class);
+            assert Modifier.isStatic(generateMethod.getModifiers());
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("Every GeneticNode has to have generate method: " + e);
+        }
+    }
+
+    static private int getMinHeight(Class<?> nodeTypeClass) {
+        try {
+            Field minHeightField = nodeTypeClass.getField("minHeight");
+            return minHeightField.getInt(null);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("GeneticNode " + nodeTypeClass.getName() + " has to have minHeight field" + e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("minHeight field of " + nodeTypeClass.getName() + "has to be static final" + e);
+        }
+    }
+
+    public GeneticNode generate(GenerationContext ctx) {
+        Random rng = new Random();
+        List<Class<?>> permissibleNodeTypeClasses = nodeTypeClasses.stream()
+                .filter(nodeTypeClass -> getMinHeight(nodeTypeClass) <= ctx.remainingHeight()).toList();
+        int roll = rng.nextInt(permissibleNodeTypeClasses.size());
+        Class<?> nodeTypeClass = permissibleNodeTypeClasses.get(roll);
+        try {
+            Method generationMethod = nodeTypeClass.getMethod("generate", GenerationContext.class);
+            return (GeneticNode)generationMethod.invoke(null, ctx);
         } catch (Exception e) {
-            System.err.println("Could not instantiate random node type: " + e);
+            System.err.println("Could not instantiate random node for type" + nodeTypeClass.getName() + ": " + e);
         }
         return null;
     }

@@ -1,24 +1,20 @@
 package xyz.stabor.microgp.geneticast;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 
-@AllArgsConstructor
-class Assignment extends GeneticNode {
-    private Factors.Identifier identifier;
-    private Expression expression;
+public class Assignment extends GeneticNode {
+    public static final int minHeight = 3;
 
-    public Assignment() {
-        this.identifier = new Factors.Identifier();
-        this.expression = new Expression();
+    protected Assignment(List<GeneticNode> children) {
+        super(children);
+    }
+
+    public static Assignment generate(GenerationContext ctx) {
+        return new Assignment(List.of(Factors.Identifier.generate(ctx.deeper()), Expression.generate(ctx.deeper())));
     }
 
     @Override
-    public GeneticNode generateChild() {
-        return expression.generateChild();
-    }
-
-    @Override
-    public String getText() {
-        return String.format("%s = %s;", identifier, expression.getText());
+    protected String getTemplate() {
+        return "%s = %s;";
     }
 }

@@ -1,18 +1,20 @@
 package xyz.stabor.microgp.geneticast;
 
+import java.util.List;
+
 public class Read extends GeneticNode {
-    private Factors.Identifier targetIdentifier;
-    public Read() {
-        this.targetIdentifier = new Factors.Identifier();
+    public static final int minHeight = 1;
+
+    protected Read(List<GeneticNode> children) {
+        super(children);
+    }
+
+    public static Read generate(GenerationContext ctx) {
+        return new Read(List.of(Factors.Identifier.generate(ctx.deeper())));
     }
 
     @Override
-    public GeneticNode generateChild() {
-        return null;
-    }
-
-    @Override
-    public String getText() {
-        return "read " + targetIdentifier.getText() + " ;";
+    protected String getTemplate() {
+        return "read %s;";
     }
 }

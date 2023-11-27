@@ -1,19 +1,20 @@
 package xyz.stabor.microgp.geneticast;
 
+import java.util.List;
+
 public class Print extends GeneticNode {
-    private Expression expression;
+    public static final int minHeight = 3;
 
-    public Print() {
-        this.expression = new Expression();
+    protected Print(List<GeneticNode> children) {
+        super(children);
+    }
+
+    public static Print generate(GenerationContext ctx) {
+        return new Print(List.of(Expression.generate(ctx.deeper())));
     }
 
     @Override
-    public GeneticNode generateChild() {
-        return this.expression.generateChild();
-    }
-
-    @Override
-    public String getText() {
-        return "print " + this.expression.getText() + " ;";
+    protected String getTemplate() {
+        return "print %s;";
     }
 }

@@ -1,63 +1,25 @@
 package xyz.stabor.microgp.geneticast;
 
-import lombok.AllArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public abstract class Arithmetic<T extends GeneticNode> extends GeneticNode {
-    abstract protected char[] getAllowedOperationTypes();
-    abstract protected T getGenerated();
-
-    @AllArgsConstructor
-    private class Operation {
-        private char operationType;
-        private T right;
+    private List<Character> operations = new ArrayList<>();
+    protected Arithmetic(List<GeneticNode> children) {
+        super(children);
     }
-    private final List<Operation> operations = new ArrayList<>();
-    private final T left;
+
+    abstract protected char[] getAllowedOperationTypes();
+
     private final char[] allowedOperationTypes = getAllowedOperationTypes();
 
-    public Arithmetic(T left) {
-        this.left = left;
-    }
-
     @Override
-    public GeneticNode generateChild() {
-        Random rng = new Random();
-        if (rng.nextBoolean()) {
-            return appendRandomOperation();
-        } else {
-            return expandRandomOperation();
-        }
-    }
-
-    private GeneticNode appendRandomOperation() {
-        Random rng = new Random();
-        char operationType = allowedOperationTypes[rng.nextInt(allowedOperationTypes.length)];
-        T operationRhs = getGenerated();
-        operations.add(new Operation(operationType, operationRhs));
-        return operationRhs;
-    }
-
-    private GeneticNode expandRandomOperation() {
-        Random rng = new Random();
-        int nodeIdx = rng.nextInt(1 + operations.size());
-        if (nodeIdx == 0) {
-            return left.generateChild();
-        } else {
-            return operations.get(nodeIdx - 1).right.generateChild();
-        }
-    }
-
-    @Override
-    public String getText() {
+    public String getTemplate() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(left.getText());
-        for (Operation operation : operations) {
-            stringBuilder.append(operation.operationType);
-            stringBuilder.append(operation.right.getText());
+        stringBuilder.append("%s");
+        for (int i = 1; i < children.size(); i++) {
+            stringBuilder.append(operations.get(i - 1));
+            stringBuilder.append("%s");
         }
         return stringBuilder.toString();
     }

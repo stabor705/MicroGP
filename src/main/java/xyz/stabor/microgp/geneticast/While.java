@@ -1,31 +1,20 @@
 package xyz.stabor.microgp.geneticast;
 
-import java.util.Random;
+import java.util.List;
 
 public class While extends GeneticNode {
-    private GeneticNode condition;
-    private Block block;
-    public While() {
-        this.condition = Conditions.generateRandom();
-        this.block = new Block();
+    static public final int minHeight = 4;
+
+    protected While(List<GeneticNode> children) {
+        super(children);
+    }
+
+    public static While generate(GenerationContext ctx) {
+        return new While(List.of(Conditions.generate(ctx.deeper()), Block.generate(ctx.deeper())));
     }
 
     @Override
-    public GeneticNode generateChild() {
-        Random rng = new Random();
-        if (rng.nextBoolean()) {
-            return condition.generateChild();
-        } else {
-            return block.generateChild();
-        }
-    }
-
-    @Override
-    public String getText() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("while ");
-        stringBuilder.append(condition.getText());
-        stringBuilder.append(block.getText());
-        return stringBuilder.toString();
+    protected String getTemplate() {
+        return "while %s %s";
     }
 }

@@ -1,21 +1,20 @@
 package xyz.stabor.microgp.geneticast;
 
+import java.util.List;
+
 public class Expression extends Arithmetic<Term> {
-    public Expression() {
-        super(new Term());
+    public static final int minHeight = 2;
+
+    protected Expression(List<GeneticNode> children) {
+        super(children);
     }
 
-    public Expression(Term left) {
-        super(left);
+    public static Expression generate(GenerationContext ctx) {
+        return new Expression(List.of(Term.generate(ctx.deeper())));
     }
 
     @Override
     protected char[] getAllowedOperationTypes() {
         return new char[]{'+', '-'};
-    }
-
-    @Override
-    protected Term getGenerated() {
-        return new Term();
     }
 }

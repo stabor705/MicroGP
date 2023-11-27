@@ -1,34 +1,35 @@
 package xyz.stabor.microgp.geneticast;
 
+import java.beans.PropertyEditorManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.StringJoiner;
 
 public class Block extends GeneticNode {
-    private static final int MAX_STATEMENTS = 10;
-    private List<GeneticNode> statements = new ArrayList<>();
-    private Random rng = new Random();
-    public Block() {
-        int numOfStatements = rng.nextInt(MAX_STATEMENTS);
+    public static final int minHeight = 2;
+    protected Block(List<GeneticNode> children) {
+        super(children);
+    }
+
+    @Override
+    protected String getTemplate() {
+        StringJoiner stringJoiner = new StringJoiner("", "{", "}");
+        for (int i = 0; i < children.size(); i++) {
+            stringJoiner.add("%s");
+        }
+        return stringJoiner.toString();
+    }
+
+    static public Block generate(GenerationContext ctx) {
+        int MAX_STATEMENTS = 10;
+        Random rng = new Random();
+
+        int numOfStatements = rng.nextInt(MAX_STATEMENTS - 1) + 1;
+        List<GeneticNode> children = new ArrayList<>();
         for (int i = 0; i < numOfStatements; i++) {
-            statements.add(Statements.generateRandom());
+            children.add(Statements.generate(ctx.deeper()));
         }
-    }
-
-    @Override
-    public GeneticNode generateChild() {
-        int roll = rng.nextInt(statements.size());
-        return statements.get(roll).generateChild();
-    }
-
-    @Override
-    public String getText() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{\n");
-        for (GeneticNode statement : statements) {
-            stringBuilder.append(statement.getText());
-        }
-        stringBuilder.append("}\n");
-        return stringBuilder.toString();
+        return new Block(children);
     }
 }

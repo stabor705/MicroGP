@@ -9,111 +9,89 @@ public class Conditions {
     ));
 
     static class Equality extends GeneticNode {
-        private Expression left;
+        public static final int minHeight = 3;
         private String operand;
-        private Expression right;
-        private Random rng = new Random();
 
         static private final String[] operands = new String[]{
             "==", "!=", ">", "<", ">=", "<="
         };
 
-        public Equality() {
-            this.operand = operands[rng.nextInt(operands.length)];
-            this.left = new Expression();
-            this.right = new Expression();
+        protected Equality(List<GeneticNode> children, String operand) {
+            super(children);
+            this.operand = operand;
+        }
+
+        static public Equality generate(GenerationContext ctx) {
+            Random rng = new Random();
+            String operand = operands[rng.nextInt(operands.length)];
+            return new Equality(List.of(Expression.generate(ctx.deeper()), Expression.generate(ctx.deeper())), operand);
         }
 
         @Override
-        public GeneticNode generateChild() {
-            if (rng.nextBoolean()) {
-                return this.left.generateChild();
-            } else {
-                return this.right.generateChild();
-            }
-        }
-
-        @Override
-        public String getText() {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(this.left.getText());
-            stringBuilder.append(this.operand);
-            stringBuilder.append(this.right.getText());
-            return stringBuilder.toString();
+        protected String getTemplate() {
+            return "%s " + operand + " %s";
         }
     }
 
     static class JoinCondition extends GeneticNode {
-        private Expression left;
+        public static final int minHeight = 3;
         private String operand;
-        private Expression right;
-
-        private Random rng = new Random();
 
         private static final String[] operands = new String[]{
             "&&", "||"
         };
 
-        public JoinCondition() {
-            this.operand = operands[rng.nextInt(operands.length)];
-            this.left = new Expression();
-            this.right = new Expression();
+        protected JoinCondition(List<GeneticNode> children, String operand) {
+            super(children);
+            this.operand = operand;
+        }
+
+        static public JoinCondition generate(GenerationContext ctx) {
+            Random rng = new Random();
+            String operand = operands[rng.nextInt(operands.length)];
+            return new JoinCondition(List.of(Expression.generate(ctx.deeper()), Expression.generate(ctx.deeper())), operand);
         }
 
         @Override
-        public GeneticNode generateChild() {
-            if (rng.nextBoolean()) {
-                return this.left.generateChild();
-            } else {
-                return this.right.generateChild();
-            }
-        }
-
-        @Override
-        public String getText() {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(this.left.getText());
-            stringBuilder.append(this.operand);
-            stringBuilder.append(this.right.getText());
-            return stringBuilder.toString();
+        protected String getTemplate() {
+            return "%s " + operand + " %s";
         }
     }
 
     static class NegatedCondition extends GeneticNode {
-        private GeneticNode condition;
+        public static final int minHeight = 4;
+        protected NegatedCondition(List<GeneticNode> children) {
+            super(children);
+        }
 
-        public NegatedCondition() {
-            this.condition = generateRandom();
+        public static NegatedCondition generate(GenerationContext ctx) {
+            return new NegatedCondition(List.of(Conditions.generate(ctx.deeper())));
         }
 
         @Override
-        public GeneticNode generateChild() {
-            return this.condition.generateChild();
-        }
-
-        @Override
-        public String getText() {
-            return "!" + this.condition.getText();
+        protected String getTemplate() {
+            return "!%s";
         }
     }
 
     static class NestedCondition extends GeneticNode {
-        private GeneticNode condition;
+        public static final int minHeight = 4;
 
-        public NestedCondition() {
-            this.condition = generateRandom();
+        protected NestedCondition(List<GeneticNode> children) {
+            super(children);
+        }
+
+        public static NestedCondition generate(GenerationContext ctx) {
+            return new NestedCondition(List.of(Conditions.generate(ctx.deeper())));
         }
 
         @Override
-        public GeneticNode generateChild() {
-            return this.condition.generateChild();
-        }
-
-        @Override
-        public String getText() {
-            return "(" + this.condition.getText() + ")";
+        protected String getTemplate() {
+            return "(%s)";
         }
     }
 
-    static public GeneticNode generateRandom() { return conditionsUnion.generateRandom(); }
+    static public GeneticNode generate(GenerationContext ctx) {
+        return conditionsUnion.generate(ctx);
+    }
 }

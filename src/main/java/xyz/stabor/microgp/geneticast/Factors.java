@@ -12,8 +12,8 @@ public class Factors {
     static private Random rng = new Random();
 
     static public class Number extends LiteralGeneticNode<Integer> {
-        public Number() {
-            super(rng.nextInt());
+        public static Number generate(GenerationContext ctx) {
+            return new Number(rng.nextInt());
         }
 
         public Number(Integer num) {
@@ -21,40 +21,50 @@ public class Factors {
         }
     }
     static public class Bool extends LiteralGeneticNode<Boolean> {
-        public Bool() {
-            super(rng.nextBoolean());
+        public static Bool generate(GenerationContext ctx) {
+            return new Bool(rng.nextBoolean());
         }
         public Bool(Boolean data) {
             super(data);
         }
     }
     static public class Identifier extends LiteralGeneticNode<String> {
-        public Identifier() {
-            super(UUID.randomUUID().toString().substring(0, 8));
+        private static final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        private static final int identifierLength = 8;
+        public static Identifier generate(GenerationContext ctx) {
+            return new Identifier(generateRandomName(identifierLength));
         }
         public Identifier(String data) {
             super(data);
         }
+
+        private static String generateRandomName(int length) {
+            StringBuilder stringBuilder = new StringBuilder();
+            Random rng = new Random();
+            for (int i = 0; i < length; i++) {
+                stringBuilder.append(characters.charAt(rng.nextInt(characters.length())));
+            }
+            return stringBuilder.toString();
+        }
     }
     static public class NestedExpression extends GeneticNode {
-        private Expression expression;
+        public static final int minHeight = 4;
 
-        public NestedExpression() {
-            this.expression = new Expression();
+        protected NestedExpression(List<GeneticNode> children) {
+            super(children);
+        }
+
+        public static NestedExpression generate(GenerationContext ctx) {
+            return new NestedExpression(List.of(Expression.generate(ctx.deeper())));
         }
 
         @Override
-        public GeneticNode generateChild() {
-            return expression.generateChild();
-        }
-
-        @Override
-        public String getText() {
-            return String.format("(%s)", expression.getText());
+        protected String getTemplate() {
+            return "(%s)";
         }
     }
 
-    static public GeneticNode generateRandom() {
-        return factorsUnion.generateRandom();
+    static public GeneticNode generate(GenerationContext ctx) {
+        return factorsUnion.generate(ctx);
     }
 }

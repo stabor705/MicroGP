@@ -1,18 +1,18 @@
 package xyz.stabor.microgp.geneticast;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 
-@AllArgsConstructor
-public class LiteralGeneticNode<T> extends GeneticNode {
+public abstract class LiteralGeneticNode<T> extends GeneticNode {
+    public static final int minHeight = 0;
     private T data;
 
-    @Override
-    public GeneticNode generateChild() {
-        return null;
+    public LiteralGeneticNode(T data) {
+        super(List.of());
+        this.data = data;
     }
 
     @Override
-    public String getText() {
+    protected String getTemplate() {
         return data.toString();
     }
 }
