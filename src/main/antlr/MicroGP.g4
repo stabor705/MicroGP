@@ -9,7 +9,7 @@ WHILE   : 'while' ;
 PRINT   : 'print' ;
 READ    : 'read' ;
 ID      : [a-zA-Z]+ ;
-NUMBER  : [0-9]+ ;
+NUMBER  : '-'?[0-9]+ ;
 ADD     : '+' ;
 SUB     : '-' ;
 MUL     : '*' ;
