@@ -1,12 +1,24 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.unions;
+
+import xyz.stabor.microgp.geneticast.GenerationContext;
+import xyz.stabor.microgp.geneticast.GeneticNode;
+import xyz.stabor.microgp.geneticast.variables.Expression;
 
 import java.util.List;
 import java.util.Random;
 
-public class Conditions {
-    static private NodeTypeUnion conditionsUnion = new NodeTypeUnion(List.of(
-            Equality.class, JoinCondition.class, NegatedCondition.class, NestedCondition.class
-    ));
+public class Conditions extends NodeTypeUnion {
+    private static Conditions instance;
+    private Conditions() {
+        super(List.of(Equality.class, JoinCondition.class, NegatedCondition.class, NestedCondition.class));
+    }
+
+    public static Conditions getInstance() {
+        if (instance == null) {
+            instance = new Conditions();
+        }
+        return instance;
+    }
 
     static class Equality extends GeneticNode {
         public static final int minHeight = 3;
@@ -65,7 +77,7 @@ public class Conditions {
         }
 
         public static NegatedCondition generate(GenerationContext ctx) {
-            return new NegatedCondition(List.of(Conditions.generate(ctx.deeper())));
+            return new NegatedCondition(List.of(Conditions.getInstance().generate(ctx.deeper())));
         }
 
         @Override
@@ -82,16 +94,12 @@ public class Conditions {
         }
 
         public static NestedCondition generate(GenerationContext ctx) {
-            return new NestedCondition(List.of(Conditions.generate(ctx.deeper())));
+            return new NestedCondition(List.of(Conditions.getInstance().generate(ctx.deeper())));
         }
 
         @Override
         protected String getTemplate() {
             return "(%s)";
         }
-    }
-
-    static public GeneticNode generate(GenerationContext ctx) {
-        return conditionsUnion.generate(ctx);
     }
 }

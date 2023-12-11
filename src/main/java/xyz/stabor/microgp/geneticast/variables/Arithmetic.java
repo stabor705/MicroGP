@@ -1,4 +1,6 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.variables;
+
+import xyz.stabor.microgp.geneticast.GeneticNode;
 
 import java.util.ArrayList;
 import java.util.List;

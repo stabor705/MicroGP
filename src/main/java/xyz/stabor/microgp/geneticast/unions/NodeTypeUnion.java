@@ -1,4 +1,7 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.unions;
+
+import xyz.stabor.microgp.geneticast.GenerationContext;
+import xyz.stabor.microgp.geneticast.GeneticNode;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -7,11 +10,15 @@ import java.util.*;
 
 public class NodeTypeUnion {
     private List<Class<?>> nodeTypeClasses;
-    private Random rng = new Random();
+    protected static Random rng = new Random();
+
+    public List<Class<?>> getNodeTypeClasses() {
+        return nodeTypeClasses;
+    }
 
     public NodeTypeUnion(List<Class<?>> nodeTypeClasses) {
         for (Class<?> nodeTypeClass : nodeTypeClasses) {
-            assert nodeTypeClass.isAssignableFrom(GeneticNode.class);
+            //assert nodeTypeClass.isAssignableFrom(GeneticNode.class);
 
             ensureGenerateMethodPresent(nodeTypeClass);
             getMinHeight(nodeTypeClass);

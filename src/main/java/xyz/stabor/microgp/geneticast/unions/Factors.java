@@ -1,15 +1,25 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.unions;
+
+import xyz.stabor.microgp.geneticast.GenerationContext;
+import xyz.stabor.microgp.geneticast.GeneticNode;
+import xyz.stabor.microgp.geneticast.variables.Expression;
+import xyz.stabor.microgp.geneticast.variables.LiteralGeneticNode;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
-public class Factors {
-    static private NodeTypeUnion factorsUnion = new NodeTypeUnion(
-            List.of(Number.class, Bool.class, Identifier.class, NestedExpression.class)
-    );
+public class Factors extends NodeTypeUnion {
+    private static Factors instance;
+    private Factors() {
+        super(List.of(Number.class, Bool.class, Identifier.class, NestedExpression.class));
+    }
 
-    static private Random rng = new Random();
+    public static Factors getInstance() {
+        if (instance == null) {
+            instance = new Factors();
+        }
+        return instance;
+    }
 
     static public class Number extends LiteralGeneticNode<Integer> {
         public static Number generate(GenerationContext ctx) {
@@ -62,9 +72,5 @@ public class Factors {
         protected String getTemplate() {
             return "(%s)";
         }
-    }
-
-    static public GeneticNode generate(GenerationContext ctx) {
-        return factorsUnion.generate(ctx);
     }
 }

@@ -1,4 +1,8 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.variables;
+
+import xyz.stabor.microgp.geneticast.unions.Conditions;
+import xyz.stabor.microgp.geneticast.GenerationContext;
+import xyz.stabor.microgp.geneticast.GeneticNode;
 
 import java.util.List;
 import java.util.Random;
@@ -12,9 +16,9 @@ public class If extends GeneticNode {
     public static If generate(GenerationContext ctx) {
         Random rng = new Random();
         if (rng.nextBoolean()) {
-            return new If(List.of(Conditions.generate(ctx.deeper()), Block.generate(ctx.deeper()), Block.generate(ctx.deeper())));
+            return new If(List.of(Conditions.getInstance().generate(ctx.deeper()), Block.generate(ctx.deeper()), Block.generate(ctx.deeper())));
         } else {
-            return new If(List.of(Conditions.generate(ctx.deeper()), Block.generate(ctx.deeper())));
+            return new If(List.of(Conditions.getInstance().generate(ctx.deeper()), Block.generate(ctx.deeper())));
         }
     }
 

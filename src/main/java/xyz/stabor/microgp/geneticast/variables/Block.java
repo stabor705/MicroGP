@@ -1,6 +1,9 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.variables;
 
-import java.beans.PropertyEditorManager;
+import xyz.stabor.microgp.geneticast.GenerationContext;
+import xyz.stabor.microgp.geneticast.GeneticNode;
+import xyz.stabor.microgp.geneticast.unions.Statements;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +31,7 @@ public class Block extends GeneticNode {
         int numOfStatements = rng.nextInt(MAX_STATEMENTS - 1) + 1;
         List<GeneticNode> children = new ArrayList<>();
         for (int i = 0; i < numOfStatements; i++) {
-            children.add(Statements.generate(ctx.deeper()));
+            children.add(Statements.getInstance().generate(ctx.deeper()));
         }
         return new Block(children);
     }

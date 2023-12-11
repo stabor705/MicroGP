@@ -1,4 +1,8 @@
-package xyz.stabor.microgp.geneticast;
+package xyz.stabor.microgp.geneticast.variables;
+
+import xyz.stabor.microgp.geneticast.unions.Conditions;
+import xyz.stabor.microgp.geneticast.GenerationContext;
+import xyz.stabor.microgp.geneticast.GeneticNode;
 
 import java.util.List;
 
@@ -10,7 +14,7 @@ public class While extends GeneticNode {
     }
 
     public static While generate(GenerationContext ctx) {
-        return new While(List.of(Conditions.generate(ctx.deeper()), Block.generate(ctx.deeper())));
+        return new While(List.of(Conditions.getInstance().generate(ctx.deeper()), Block.generate(ctx.deeper())));
     }
 
     @Override
