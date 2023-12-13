@@ -8,7 +8,6 @@ import xyz.stabor.microgp.MicroGPLexer;
 import xyz.stabor.microgp.MicroGPParser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class GeneticsTests {
 
