@@ -9,7 +9,7 @@ WHILE   : 'while' ;
 PRINT   : 'print' ;
 READ    : 'read' ;
 ID      : [a-zA-Z]+ ;
-NUMBER  : '-'?[0-9]+ ;
+NUMBER  : '-'?[0-9]+('.'[0-9]+)? ;
 ADD     : '+' ;
 SUB     : '-' ;
 MUL     : '*' ;
@@ -53,7 +53,7 @@ readStatement : READ ID ';' ;
 block : LBRACE statement* RBRACE ;
 
 condition : expression (EQUAL | NOTEQUAL | GT | LT | GTE | LTE) expression
-          | expression (AND | OR) expression
+          | condition (AND | OR) condition
           | NOT condition
           | LPAREN condition RPAREN ;
 
