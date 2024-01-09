@@ -1,17 +1,18 @@
 package xyz.stabor.microgp.interpreter;
 
-import org.apache.commons.lang3.SerializationUtils;
 import xyz.stabor.microgp.MicroGPBaseVisitor;
+import xyz.stabor.microgp.MicroGPParser;
 
 import java.util.*;
 
-public class Interpreter extends MicroGPBaseVisitor<Void> {
+public class Interpreter extends MicroGPBaseVisitor<Double> {
     private List<Double> output = new ArrayList<>();
-    private Queue<Double> input;
+    private Queue<Double> input = new LinkedList<>();
     private Map<String, Double> symbols = new HashMap<>();
     private int maxTime = 100;
     private int timer = 0;
 
+    public Interpreter() {}
     public Interpreter(List<Double> input) {
         this.input = new LinkedList<>(input);
     }
@@ -19,6 +20,139 @@ public class Interpreter extends MicroGPBaseVisitor<Void> {
     public Interpreter(List<Double> input, int maxTime) {
         this.input = new LinkedList<>(input);
         this.maxTime = maxTime;
+    }
+
+    @Override
+    public Double visitAssignment(MicroGPParser.AssignmentContext ctx) {
+        Double rvalue = visitExpression(ctx.expression());
+        symbols.put(ctx.ID().getText(), rvalue);
+        return rvalue;
+    }
+
+    @Override
+    public Double visitExpression(MicroGPParser.ExpressionContext ctx) {
+        double result = visitTerm(ctx.term(0));
+        for (int i = 1; i < ctx.term().size(); i++) {
+            String operator = ctx.getChild(2 * i - 1).getText();
+            Double operand = visitTerm(ctx.term(i));
+            if (operator.equals("+")) {
+                result += operand;
+            } else {
+                result -= operand;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Double visitTerm(MicroGPParser.TermContext ctx) {
+        double result = visitFactor(ctx.factor(0));
+        for (int i = 1; i < ctx.factor().size(); i++) {
+            String operator = ctx.getChild(2 * i - 1).getText();
+            Double operand  = visitFactor(ctx.factor(i));
+            if (operator.equals("*")) {
+                result *= operand;
+            } else {
+                result /= operand;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Double visitFactor(MicroGPParser.FactorContext ctx) {
+        if (ctx.NUMBER() != null) {
+            return Double.parseDouble(ctx.NUMBER().getText());
+        }
+        if (ctx.TRUE() != null) {
+            return 1.0;
+        }
+
+        if (ctx.FALSE() != null) {
+            return 0.0;
+        }
+
+        if (ctx.ID() != null) {
+            symbols.putIfAbsent(ctx.ID().getText(), 0.0);
+            return symbols.get(ctx.ID().getText());
+        }
+
+        return visitExpression(ctx.expression());
+    }
+
+    @Override
+    public Double visitCondition(MicroGPParser.ConditionContext ctx) {
+        if (ctx.condition(0) != null) {
+            if (ctx.NOT() != null) {
+                return visitCondition(ctx.condition(0)) == 1.0 ? 0.0 : 1.0;
+            }
+            if (ctx.LPAREN() != null) {
+                return visitCondition(ctx.condition(0));
+            }
+            Double c1 = visitCondition(ctx.condition(0));
+            Double c2 = visitCondition(ctx.condition(1));
+            if (ctx.AND() != null) {
+                return (c1 == 1.0 && c2 == 1.0) ? 1.0 : 0.0;
+            }
+            return (c1 == 1.0 || c2 == 1.0) ? 1.0 : 0.0;
+        }
+
+        Double e1 = visitExpression(ctx.expression(0));
+        Double e2 = visitExpression(ctx.expression(1));
+        if (ctx.EQUAL() != null) {
+            return Objects.equals(e1, e2) ? 1.0 : 0.0;
+        }
+        if (ctx.NOTEQUAL() != null) {
+            return !Objects.equals(e1, e2) ? 1.0 : 0.0;
+        }
+        if (ctx.GT() != null) {
+            return e1 > e2 ? 1.0 : 0.0;
+        }
+        if (ctx.LT() != null) {
+            return e1 < e2 ? 1.0 : 0.0;
+        }
+        if (ctx.GTE() != null) {
+            return e1 >= e2 ? 1.0 : 0.0;
+        }
+        return e1 <= e2 ? 1.0 : 0.0;
+    }
+
+    @Override
+    public Double visitReadStatement(MicroGPParser.ReadStatementContext ctx) {
+        Double data = input.poll();
+        if (data == null) {
+            symbols.put(ctx.ID().getText(), 0.0);
+        } else {
+            symbols.put(ctx.ID().getText(), data);
+        }
+        return symbols.get(ctx.ID().getText());
+    }
+
+    @Override
+    public Double visitPrintStatement(MicroGPParser.PrintStatementContext ctx) {
+        Double result = visitExpression(ctx.expression());
+        output.add(result);
+        return result;
+    }
+
+    @Override
+    public Double visitIfStatement(MicroGPParser.IfStatementContext ctx) {
+        Double cond = visitCondition(ctx.condition());
+        if (cond == 1.0) {
+            return visitBlock(ctx.block(0));
+        }
+        if (ctx.ELSE() != null) {
+            return visitBlock(ctx.block(1));
+        }
+        return 0.0;
+    }
+
+    @Override
+    public Double visitWhileLoop(MicroGPParser.WhileLoopContext ctx) {
+        while (visitCondition(ctx.condition()) == 1.0) {
+            visitBlock(ctx.block());
+        }
+        return 0.0;
     }
 
     public List<Double> readOutput() {
