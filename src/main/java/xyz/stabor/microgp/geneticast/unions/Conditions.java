@@ -46,7 +46,7 @@ public class Conditions extends NodeTypeUnion {
     }
 
     static class JoinCondition extends GeneticNode {
-        public static final int minHeight = 3;
+        public static final int minHeight = 4;
         private String operand;
 
         private static final String[] operands = new String[]{
@@ -61,7 +61,7 @@ public class Conditions extends NodeTypeUnion {
         static public JoinCondition generate(GenerationContext ctx) {
             Random rng = new Random();
             String operand = operands[rng.nextInt(operands.length)];
-            return new JoinCondition(List.of(Expression.generate(ctx.deeper()), Expression.generate(ctx.deeper())), operand);
+            return new JoinCondition(List.of(Conditions.getInstance().generate(ctx.deeper()), Conditions.getInstance().generate(ctx.deeper())), operand);
         }
 
         @Override
