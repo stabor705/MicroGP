@@ -25,10 +25,9 @@ public class Block extends GeneticNode {
     }
 
     static public Block generate(GenerationContext ctx) {
-        int MAX_STATEMENTS = 10;
         Random rng = new Random();
 
-        int numOfStatements = rng.nextInt(MAX_STATEMENTS - 1) + 1;
+        int numOfStatements = rng.nextInt(ctx.maxWidth() - 1) + 1;
         List<GeneticNode> children = new ArrayList<>();
         for (int i = 0; i < numOfStatements; i++) {
             children.add(Statements.getInstance().generate(ctx.deeper()));

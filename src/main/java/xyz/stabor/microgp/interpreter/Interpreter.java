@@ -1,5 +1,6 @@
 package xyz.stabor.microgp.interpreter;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import xyz.stabor.microgp.MicroGPBaseVisitor;
 import xyz.stabor.microgp.MicroGPParser;
 
@@ -24,6 +25,7 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
 
     @Override
     public Double visitAssignment(MicroGPParser.AssignmentContext ctx) {
+        timer++;
         Double rvalue = visitExpression(ctx.expression());
         symbols.put(ctx.ID().getText(), rvalue);
         return rvalue;
@@ -119,6 +121,7 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
 
     @Override
     public Double visitReadStatement(MicroGPParser.ReadStatementContext ctx) {
+        timer++;
         Double data = input.poll();
         if (data == null) {
             symbols.put(ctx.ID().getText(), 0.0);
@@ -130,6 +133,7 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
 
     @Override
     public Double visitPrintStatement(MicroGPParser.PrintStatementContext ctx) {
+        timer++;
         Double result = visitExpression(ctx.expression());
         output.add(result);
         return result;
@@ -150,7 +154,35 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
     @Override
     public Double visitWhileLoop(MicroGPParser.WhileLoopContext ctx) {
         while (visitCondition(ctx.condition()) == 1.0) {
+            timer++;
             visitBlock(ctx.block());
+            if (timer > maxTime) {
+                break;
+            }
+        }
+        return 0.0;
+    }
+
+    @Override
+    public Double visitProgram(MicroGPParser.ProgramContext ctx) {
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+            child.accept(this);
+            if (timer > maxTime) {
+                break;
+            }
+        }
+        return 0.0;
+    }
+
+    @Override
+    public Double visitBlock(MicroGPParser.BlockContext ctx) {
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            ParseTree child = ctx.getChild(i);
+            child.accept(this);
+            if (timer > maxTime) {
+                break;
+            }
         }
         return 0.0;
     }
@@ -160,4 +192,5 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
         output.clear();
         return out;
     }
+
 }

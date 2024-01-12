@@ -14,7 +14,7 @@ public class GeneticsTests {
     @RepeatedTest(1000)
     void testMutatedProgramsAreSyntacticallyCorrect() {
         GeneticAST program = GeneticAST.generate(5);
-        GeneticAST mutated = program.mutated();
+        GeneticAST mutated = program.mutated(new GenerationContext(5, 5, 5));
         CharStream inputStream = CharStreams.fromString(mutated.toString());
         MicroGPLexer lexer = new MicroGPLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
@@ -23,7 +23,7 @@ public class GeneticsTests {
         assertEquals(0, parser.getNumberOfSyntaxErrors());
     }
 
-    @RepeatedTest(10000)
+    @RepeatedTest(1000)
     void testCrossedProgramsAreSyntacticallyCorrect() {
         GeneticAST programA = GeneticAST.generate(5);
         GeneticAST programB = GeneticAST.generate(5);

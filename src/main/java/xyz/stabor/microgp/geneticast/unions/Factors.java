@@ -39,22 +39,11 @@ public class Factors extends NodeTypeUnion {
         }
     }
     static public class Identifier extends LiteralGeneticNode<String> {
-        private static final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        private static final int identifierLength = 8;
         public static Identifier generate(GenerationContext ctx) {
-            return new Identifier(generateRandomName(identifierLength));
+            return new Identifier(String.format("$%d", rng.nextInt(ctx.maxVars())));
         }
         public Identifier(String data) {
             super(data);
-        }
-
-        private static String generateRandomName(int length) {
-            StringBuilder stringBuilder = new StringBuilder();
-            Random rng = new Random();
-            for (int i = 0; i < length; i++) {
-                stringBuilder.append(characters.charAt(rng.nextInt(characters.length())));
-            }
-            return stringBuilder.toString();
         }
     }
     static public class NestedExpression extends GeneticNode {

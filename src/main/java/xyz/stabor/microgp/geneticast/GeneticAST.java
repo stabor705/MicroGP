@@ -15,7 +15,7 @@ public class GeneticAST implements Serializable {
     }
 
     public static GeneticAST generate(int height) {
-        return new GeneticAST(Program.generate(new GenerationContext(height)));
+        return new GeneticAST(Program.generate(new GenerationContext(height, 5, 5)));
     }
 
     @Override
@@ -27,10 +27,10 @@ public class GeneticAST implements Serializable {
         this.root = program;
     }
 
-    public GeneticAST mutated() {
+    public GeneticAST mutated(GenerationContext ctx) {
         GeneticAST ast = SerializationUtils.clone(this);
         GeneticNode mutatedNode = ast.selectRandomNode();
-        GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight()));
+        GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight(), ctx.maxWidth(), ctx.maxVars()));
         ast.replaceNode(mutatedNode, newNode);
         return ast;
     }
