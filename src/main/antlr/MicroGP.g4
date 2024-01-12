@@ -8,7 +8,7 @@ ELSE    : 'else' ;
 WHILE   : 'while' ;
 PRINT   : 'print' ;
 READ    : 'read' ;
-ID      : [a-zA-Z]+ ;
+ID      : '$'[0-9]+ ;
 NUMBER  : '-'?[0-9]+('.'[0-9]+)? ;
 ADD     : '+' ;
 SUB     : '-' ;

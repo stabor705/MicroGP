@@ -76,7 +76,7 @@ public class InterpreterTests {
 
     @Test
     void readStatementWorksCorrectly() {
-        assertEquals(List.of(123.0), interpret("read a; print a;", List.of(123.0)));
+        assertEquals(List.of(123.0), interpret("read $1; print $1;", List.of(123.0)));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class InterpreterTests {
 
     @Test
     void whileStatementWorksCorrectly() {
-        assertEquals(List.of(1.0, 2.0, 3.0, 4.0, 5.0), interpret("i = 1; while i <= 5 { print i; i = i + 1; }"));
+        assertEquals(List.of(1.0, 2.0, 3.0, 4.0, 5.0), interpret("$1 = 1; while $1 <= 5 { print $1; $1 = $1 + 1; }"));
     }
 
     @Test
