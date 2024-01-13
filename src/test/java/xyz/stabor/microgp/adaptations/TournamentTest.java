@@ -18,7 +18,7 @@ public class TournamentTest {
         int sizeOfTournament = 3;
         List<Integer> newPopulation = Tournament.selectNewPopulation(currentPopulation, sizeOfTournament);
 
-        assertEquals(currentPopulation.size(), newPopulation.size(), "The size of new population should be equal to the size of current population.");
+        assertEquals(currentPopulation.size(), newPopulation.size());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class TournamentTest {
         List<Integer> newPopulation = Tournament.selectNewPopulation(currentPopulation, sizeOfTournament);
 
         for(Integer idx : newPopulation) {
-            assertTrue(idx >= 0 && idx < currentPopulation.size(), "All indices in the new population should be within the range of the current population.");
+            assertTrue(idx >= 0 && idx < currentPopulation.size());
         }
     }
 
