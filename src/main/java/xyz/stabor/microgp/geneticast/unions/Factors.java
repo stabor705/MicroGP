@@ -22,7 +22,7 @@ public class Factors extends NodeTypeUnion {
 
     static public class Number extends LiteralGeneticNode<Integer> {
         public static Number generate(GenerationContext ctx) {
-            return new Number(789);
+            return new Number(rng.nextInt());
         }
 
         public Number(Integer num) {

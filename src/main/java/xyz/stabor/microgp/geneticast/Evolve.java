@@ -18,8 +18,8 @@ public class Evolve {
         for (int generation = 0; generation < numOfGenerations; ++generation) {
             System.out.println("Generation: " + generation);
             List<Double> fitnessValues = adaptationFunction.calculateFitness(programs);
-            if(fitnessValues.stream().anyMatch(value -> value == 1.0)){
-//                System.out.println(fitnessValues);
+            if(fitnessValues.stream().anyMatch(value -> value > 0.1)){
+                System.out.println(fitnessValues);
             }
             bestProgram = programs.get(chooseBestFitness(fitnessValues));
 //            System.out.println(fitnessValues);
@@ -53,10 +53,12 @@ public class Evolve {
         int bestIndex = -1;
         for (int i = 0; i < fitness.size(); ++i) {
             if (fitness.get(i) > bestFitness) {
+                System.out.println(fitness);
                 bestFitness = fitness.get(i);
                 bestIndex = i;
             }
         }
+        System.out.print(bestFitness + ", ");
         return bestIndex;
     }
 

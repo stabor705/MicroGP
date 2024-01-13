@@ -39,9 +39,9 @@ public class GeneticProgrammingTests {
 
     @Test
     void test11B() {
-        int numOfGenerations = 10;
+        int numOfGenerations = 20;
         double targetValue = 789.0;
-        List<GeneticAST> programs = initializePrograms(100, 6);
+        List<GeneticAST> programs = initializePrograms(10, 5);
         AdaptationInterface secondFunction = new SecondFunction();
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, secondFunction);
         System.out.println(bestProgram.toString());
