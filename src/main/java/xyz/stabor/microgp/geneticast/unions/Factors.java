@@ -6,7 +6,6 @@ import xyz.stabor.microgp.geneticast.variables.Expression;
 import xyz.stabor.microgp.geneticast.variables.LiteralGeneticNode;
 
 import java.util.List;
-import java.util.Random;
 
 public class Factors extends NodeTypeUnion {
     private static Factors instance;
@@ -23,7 +22,7 @@ public class Factors extends NodeTypeUnion {
 
     static public class Number extends LiteralGeneticNode<Integer> {
         public static Number generate(GenerationContext ctx) {
-            return new Number(rng.nextInt());
+            return new Number(789);
         }
 
         public Number(Integer num) {

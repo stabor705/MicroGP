@@ -1,0 +1,15 @@
+package xyz.stabor.microgp.adaptations.functions;
+
+import xyz.stabor.microgp.adaptations.AdaptationInterface;
+import xyz.stabor.microgp.interpreter.Interpreter;
+
+import java.util.List;
+
+public class FirstFunction implements AdaptationInterface {
+    @Override
+    public double calculateFitnessForProgram(String program){
+        List<Double> output = Interpreter.interpret(program, List.of());
+        return output.stream().anyMatch(value -> value == 1.0) ? 1.0 : 0;
+    }
+
+}

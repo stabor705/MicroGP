@@ -1,7 +1,11 @@
 package xyz.stabor.microgp.interpreter;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import xyz.stabor.microgp.MicroGPBaseVisitor;
+import xyz.stabor.microgp.MicroGPLexer;
 import xyz.stabor.microgp.MicroGPParser;
 
 import java.util.*;
@@ -21,6 +25,22 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
     public Interpreter(List<Double> input, int maxTime) {
         this.input = new LinkedList<>(input);
         this.maxTime = maxTime;
+    }
+
+    private static MicroGPParser getParser(String program) {
+        CharStream stream = CharStreams.fromString(program);
+        MicroGPLexer lexer = new MicroGPLexer(stream);
+        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+        MicroGPParser parser = new MicroGPParser(commonTokenStream);
+        return parser;
+    }
+
+    public static List<Double> interpret(String program, List<Double> input) {
+        MicroGPParser parser = getParser(program);
+        MicroGPParser.ProgramContext ctx = parser.program();
+        Interpreter interpreter = new Interpreter(input);
+        interpreter.visitProgram(ctx);
+        return interpreter.readOutput();
     }
 
     @Override
@@ -189,7 +209,6 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
 
     public List<Double> readOutput() {
         List<Double> out = new ArrayList<>(output);
-        output.clear();
         return out;
     }
 

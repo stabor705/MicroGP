@@ -27,8 +27,9 @@ public class GeneticAST implements Serializable {
         this.root = program;
     }
 
-    public GeneticAST mutated(GenerationContext ctx) {
+    public GeneticAST mutate(GenerationContext ctx) {
         GeneticAST ast = SerializationUtils.clone(this);
+//        System.out.println("mutate: " + ast.toString());
         GeneticNode mutatedNode = ast.selectRandomNode();
         GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight(), ctx.maxWidth(), ctx.maxVars()));
         ast.replaceNode(mutatedNode, newNode);
@@ -63,7 +64,13 @@ public class GeneticAST implements Serializable {
         }
 
         GeneticNode parent = node.parent;
+        if(parent == null){
+            return;
+        }
         int mutatedNodeIdx = parent.children.indexOf(node);
+        if(mutatedNodeIdx < 0) {
+            return;
+        }
         parent.children.remove(node);
         parent.children.add(mutatedNodeIdx, newNode);
     }
