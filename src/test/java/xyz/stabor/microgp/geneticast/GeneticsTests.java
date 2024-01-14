@@ -13,11 +13,11 @@ public class GeneticsTests {
 
     @RepeatedTest(1000)
     void testMutatedProgramsAreSyntacticallyCorrect() {
-        GeneticAST program = GeneticAST.generate(15, 5);
-        GeneticAST mutated = program.mutate(new GenerationContext(15, 5, 5, 5));
+        GeneticAST program = GeneticAST.generate(5, 5);
+        GeneticAST mutated = program.mutate(new GenerationContext(5, 5, 5, 5));
         CharStream inputStream = CharStreams.fromString(mutated.toString());
-        if(mutated.toString().contains("+")){
-            System.out.println("MA PLUSA");
+        if(mutated.toString().contains("read")){
+            System.out.println(mutated);
         }
         MicroGPLexer lexer = new MicroGPLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);

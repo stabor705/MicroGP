@@ -13,9 +13,9 @@ public class Evolve {
         Random rng = new Random();
         int tournamentSize = 2;
         double crossProb = 0.4;
-        int bestProgramIndex = 0;
+        int bestProgramIndex;
         GeneticAST bestProgram = null;
-        List<Double> fitnessValues = adaptationFunction.calculateFitness(programs);
+        List<Double> fitnessValues;
         for (int generation = 0; generation < numOfGenerations; ++generation) {
             fitnessValues = adaptationFunction.calculateFitness(programs);
             System.out.println(fitnessValues);
@@ -33,7 +33,7 @@ public class Evolve {
                     individual = individual.crossover(partner);
                 }
                 else{
-                    individual = individual.mutate(new GenerationContext(5, 10, 5, maxConstVal)); // adapt this
+                    individual = individual.mutate(new GenerationContext(5, 10, 5, maxConstVal)); // adapt this context
                 }
                 newPopulation.add(individual);
             }

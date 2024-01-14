@@ -80,7 +80,7 @@ public class InterpreterTests {
     }
 
     @Test
-    void readStatementWorksCorrectlyWithVariables() {
+    void printStatementWorksCorrectlyWithVariables() {
         assertEquals(List.of(789.0), interpret("$1=789; print $1;", List.of(789.0)));
     }
 

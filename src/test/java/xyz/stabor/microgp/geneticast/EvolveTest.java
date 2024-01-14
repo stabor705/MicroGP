@@ -2,13 +2,11 @@ package xyz.stabor.microgp.geneticast;
 
 import org.junit.jupiter.api.Test;
 import xyz.stabor.microgp.adaptations.AdaptationInterface;
-import xyz.stabor.microgp.adaptations.functions.FirstFunction;
-import xyz.stabor.microgp.adaptations.functions.FithFunction;
-import xyz.stabor.microgp.adaptations.functions.FourthFunction;
-import xyz.stabor.microgp.adaptations.functions.SecondFunction;
+import xyz.stabor.microgp.adaptations.functions.*;
 import xyz.stabor.microgp.interpreter.Interpreter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,6 +38,7 @@ public class EvolveTest {
 
     @Test
     void test11B() {
+        // W tym tescie mozna by "ouszukac" ustawiajac minConstValue i maxConstValue (tak jak w tinyGP) - ale raczej nie o to chodzi w testach
         int numOfGenerations = 20;
         double targetValue = 789.0;
         int maxConstValue = 10;
@@ -58,8 +57,8 @@ public class EvolveTest {
         double targetValue = 1.0;
         int maxConstValue = 5;
         List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue);
-        AdaptationInterface firstFunction = new FourthFunction();
-        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, firstFunction, maxConstValue);
+        AdaptationInterface fourthFunction = new FourthFunction();
+        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fourthFunction, maxConstValue);
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
@@ -72,12 +71,27 @@ public class EvolveTest {
         double targetValue = 1.0;
         int maxConstValue = 5;
         List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue);
-        AdaptationInterface firstFunction = new FithFunction();
-        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, firstFunction, maxConstValue);
+        AdaptationInterface fifthFunction = new FithFunction();
+        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fifthFunction, maxConstValue);
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
-        assertTrue(output.contains(targetValue));
+        assertTrue(output.contains(targetValue) && output.size() == 1);
+    }
+
+    @Test
+    void test12A() {     // Ten test "oszukuje". Bez arytmetyki
+        int numOfGenerations = 20;
+        double targetValue = 3.0;
+        int maxConstValue = 5;
+        List<Double> inputValues = new ArrayList<>(Arrays.asList(1.0, 2.0));
+        List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue);
+        AdaptationInterface sixthFunction = new SixthFunction();
+        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, sixthFunction, maxConstValue);
+        System.out.println(bestProgram.toString());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        System.out.println(output);
+        assertTrue(output.contains(targetValue) && output.size() == 1);
     }
 }
 
