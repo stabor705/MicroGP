@@ -1,8 +1,8 @@
 package xyz.stabor.microgp.geneticast;
 
-public record GenerationContext(int maxDepth, int maxWidth, int maxVars, int currentDepth) {
-    public GenerationContext(int maxDepth, int maxWidth, int maxVars) {
-        this(maxDepth, maxWidth, maxVars, 0);
+public record GenerationContext(int maxDepth, int maxWidth, int maxVars, int currentDepth, int maxConstValue) {
+    public GenerationContext(int maxDepth, int maxWidth, int maxVars, int maxConstVal) {
+        this(maxDepth, maxWidth, maxVars, 0, maxConstVal);
     }
 
     public int remainingHeight() {
@@ -10,6 +10,6 @@ public record GenerationContext(int maxDepth, int maxWidth, int maxVars, int cur
     }
 
     public GenerationContext deeper() {
-        return new GenerationContext(maxDepth, maxWidth, maxVars, currentDepth + 1);
+        return new GenerationContext(maxDepth, maxWidth, maxVars, currentDepth + 1, maxConstValue);
     }
 }

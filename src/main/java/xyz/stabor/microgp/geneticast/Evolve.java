@@ -9,56 +9,49 @@ import java.util.List;
 import java.util.Random;
 
 public class Evolve {
-    public static GeneticAST evolve(List<GeneticAST> programs, int numOfGenerations, AdaptationInterface adaptationFunction) {
+    public static GeneticAST evolve(List<GeneticAST> programs, int numOfGenerations, AdaptationInterface adaptationFunction, int maxConstVal) {
         Random rng = new Random();
-        int tournamentSize = 5;
-        double crossProb = 0.5;
-        double mutProb = 0.5;
+        int tournamentSize = 2;
+        double crossProb = 0.4;
+        int bestProgramIndex = 0;
         GeneticAST bestProgram = null;
+        List<Double> fitnessValues = adaptationFunction.calculateFitness(programs);
         for (int generation = 0; generation < numOfGenerations; ++generation) {
-            System.out.println("Generation: " + generation);
-            List<Double> fitnessValues = adaptationFunction.calculateFitness(programs);
-            if(fitnessValues.stream().anyMatch(value -> value > 0.1)){
-                System.out.println(fitnessValues);
-            }
-            bestProgram = programs.get(chooseBestFitness(fitnessValues));
-//            System.out.println(fitnessValues);
+            fitnessValues = adaptationFunction.calculateFitness(programs);
+            System.out.println(fitnessValues);
+            bestProgramIndex = chooseBestFitness(fitnessValues);
+            bestProgram = programs.get(bestProgramIndex);
+            System.out.println("Generation: " + generation + " BestFit: " + fitnessValues.get(bestProgramIndex));
             List<Integer> selectedIndices = Tournament.selectNewPopulation(fitnessValues, tournamentSize);
+            System.out.println(selectedIndices);
             List<GeneticAST> newPopulation = new ArrayList<>();
-//            System.out.println(selectedIndices);
             for (Integer index : selectedIndices) {
                 GeneticAST individual = SerializationUtils.clone(programs.get(index));
-//                System.out.println("Individual: " + individual.toString());
-
-                if (rng.nextDouble() < mutProb) {
-                    individual = individual.mutate(new GenerationContext(6, 10, 10)); // adapt this
-                }
-
                 if (rng.nextDouble() < crossProb) {
                     int partnerIndex = rng.nextInt(programs.size());
                     GeneticAST partner = SerializationUtils.clone(programs.get(partnerIndex));
                     individual = individual.crossover(partner);
                 }
-
+                else{
+                    individual = individual.mutate(new GenerationContext(5, 10, 5, maxConstVal)); // adapt this
+                }
                 newPopulation.add(individual);
             }
-
             programs = newPopulation;
         }
         return bestProgram;
     }
 
     private static int chooseBestFitness(List<Double> fitness) {
+        Random rand = new Random();
         double bestFitness = Double.NEGATIVE_INFINITY;
-        int bestIndex = -1;
+        int bestIndex = rand.nextInt(fitness.size());
         for (int i = 0; i < fitness.size(); ++i) {
             if (fitness.get(i) > bestFitness) {
-                System.out.println(fitness);
                 bestFitness = fitness.get(i);
                 bestIndex = i;
             }
         }
-        System.out.print(bestFitness + ", ");
         return bestIndex;
     }
 

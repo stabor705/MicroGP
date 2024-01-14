@@ -12,7 +12,7 @@ import java.io.FileWriter;
 
 public class Main {
     public static void main(String[] args) {
-        GeneticNode program = Program.generate(new GenerationContext(5, 5, 5));
+        GeneticNode program = Program.generate(new GenerationContext(5, 5, 5, 5));
         System.out.println(program);
     }
 
@@ -20,7 +20,7 @@ public class Main {
         String programName = "example.microgp";
         String serializedName = "exampleast.bin";
 
-        GeneticNode program = Program.generate(new GenerationContext(5, 5, 5));
+        GeneticNode program = Program.generate(new GenerationContext(5, 5, 5, 5));
 
         try {
             FileWriter fileWriter = new FileWriter(programName);

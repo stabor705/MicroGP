@@ -26,4 +26,17 @@ public class Tournament {
         }
         return newPopulation;
     }
+
+    public static int tournament(List<Double> fitness, int tournamentSize) {
+        Random rand = new Random();
+        double bestFitness = Double.NEGATIVE_INFINITY;
+        int bestIndex = rand.nextInt(fitness.size());
+        for (int i = 0; i < tournamentSize; ++i) {
+            if (fitness.get(rand.nextInt(fitness.size())) > bestFitness) {
+                bestFitness = fitness.get(i);
+                bestIndex = i;
+            }
+        }
+        return bestIndex;
+    }
 }

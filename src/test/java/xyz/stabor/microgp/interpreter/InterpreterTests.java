@@ -102,4 +102,16 @@ public class InterpreterTests {
         String program = "if (true) { print 123 }";
     }
 
+    @Test
+    void shouldNotPrintNullVariable(){
+        assertTrue(interpret("print $2;").isEmpty());
+    }
+
+    @Test
+    void shouldNotImplicitlyCastBooleanToDouble(){
+        assertTrue(interpret("print true; print false;").isEmpty());
+    }
+
 }
+
+

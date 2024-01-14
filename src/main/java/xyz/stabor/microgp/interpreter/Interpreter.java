@@ -87,15 +87,15 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
             return Double.parseDouble(ctx.NUMBER().getText());
         }
         if (ctx.TRUE() != null) {
-            return 1.0;
+            return 0.1;
         }
 
         if (ctx.FALSE() != null) {
-            return 0.0;
+            return 0.1;
         }
 
         if (ctx.ID() != null) {
-            symbols.putIfAbsent(ctx.ID().getText(), 0.0);
+            symbols.putIfAbsent(ctx.ID().getText(), 0.1);
             return symbols.get(ctx.ID().getText());
         }
 
@@ -144,7 +144,7 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
         timer++;
         Double data = input.poll();
         if (data == null) {
-            symbols.put(ctx.ID().getText(), 0.0);
+            symbols.put(ctx.ID().getText(), 0.1);
         } else {
             symbols.put(ctx.ID().getText(), data);
         }
@@ -155,7 +155,9 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
     public Double visitPrintStatement(MicroGPParser.PrintStatementContext ctx) {
         timer++;
         Double result = visitExpression(ctx.expression());
-        output.add(result);
+        if(result != 0.1){
+            output.add(result);
+        }
         return result;
     }
 

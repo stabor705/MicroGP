@@ -13,9 +13,12 @@ public class GeneticsTests {
 
     @RepeatedTest(1000)
     void testMutatedProgramsAreSyntacticallyCorrect() {
-        GeneticAST program = GeneticAST.generate(5);
-        GeneticAST mutated = program.mutate(new GenerationContext(5, 5, 5));
+        GeneticAST program = GeneticAST.generate(15, 5);
+        GeneticAST mutated = program.mutate(new GenerationContext(15, 5, 5, 5));
         CharStream inputStream = CharStreams.fromString(mutated.toString());
+        if(mutated.toString().contains("+")){
+            System.out.println("MA PLUSA");
+        }
         MicroGPLexer lexer = new MicroGPLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         MicroGPParser parser = new MicroGPParser(tokenStream);
@@ -25,8 +28,8 @@ public class GeneticsTests {
 
     @RepeatedTest(1000)
     void testCrossedProgramsAreSyntacticallyCorrect() {
-        GeneticAST programA = GeneticAST.generate(5);
-        GeneticAST programB = GeneticAST.generate(5);
+        GeneticAST programA = GeneticAST.generate(5, 5);
+        GeneticAST programB = GeneticAST.generate(5, 5);
         GeneticAST crossed = programA.crossover(programB);
 
         CharStream inputStream = CharStreams.fromString(crossed.toString());
