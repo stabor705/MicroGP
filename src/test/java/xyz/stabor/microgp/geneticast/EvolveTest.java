@@ -1,12 +1,11 @@
-package xyz.stabor.microgp;
+package xyz.stabor.microgp.geneticast;
 
 import org.junit.jupiter.api.Test;
 import xyz.stabor.microgp.adaptations.AdaptationInterface;
 import xyz.stabor.microgp.adaptations.functions.FirstFunction;
+import xyz.stabor.microgp.adaptations.functions.FithFunction;
 import xyz.stabor.microgp.adaptations.functions.FourthFunction;
 import xyz.stabor.microgp.adaptations.functions.SecondFunction;
-import xyz.stabor.microgp.geneticast.Evolve;
-import xyz.stabor.microgp.geneticast.GeneticAST;
 import xyz.stabor.microgp.interpreter.Interpreter;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GeneticProgrammingTests {
+public class EvolveTest {
 
     List<GeneticAST> initializePrograms(int numOfPrograms, int initalHeight, int maxConstValue){
         List<GeneticAST> resultList = new ArrayList<>();
@@ -60,6 +59,20 @@ public class GeneticProgrammingTests {
         int maxConstValue = 5;
         List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue);
         AdaptationInterface firstFunction = new FourthFunction();
+        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, firstFunction, maxConstValue);
+        System.out.println(bestProgram.toString());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        System.out.println(output);
+        assertTrue(output.contains(targetValue));
+    }
+
+    @Test
+    void test11E() {
+        int numOfGenerations = 10;
+        double targetValue = 1.0;
+        int maxConstValue = 5;
+        List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue);
+        AdaptationInterface firstFunction = new FithFunction();
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, firstFunction, maxConstValue);
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
