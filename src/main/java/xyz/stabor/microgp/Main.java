@@ -1,9 +1,15 @@
 package xyz.stabor.microgp;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.lang3.SerializationUtils;
 import xyz.stabor.microgp.geneticast.GenerationContext;
 import xyz.stabor.microgp.geneticast.GeneticNode;
 import xyz.stabor.microgp.geneticast.variables.Program;
+import xyz.stabor.microgp.MicroGPLexer;
+import xyz.stabor.microgp.MicroGPParser;
+import xyz.stabor.microgp.interpreter.Interpreter;
 
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -12,8 +18,13 @@ import java.io.FileWriter;
 
 public class Main {
     public static void main(String[] args) {
-        GeneticNode program = Program.generate(new GenerationContext(5, 5, 5, 5));
+        GeneticNode program = Program.generate(new GenerationContext(5, 2, 5, 5));
         System.out.println(program);
+        CharStream stream = CharStreams.fromString(program.toString());
+        MicroGPLexer lexer = new MicroGPLexer(stream);
+        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+        MicroGPParser parser = new MicroGPParser(commonTokenStream);
+        MicroGPParser.ProgramContext ctx = parser.program();
     }
 
     static void serializeAndDeserialize() {
