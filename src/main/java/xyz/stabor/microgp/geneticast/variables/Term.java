@@ -22,11 +22,18 @@ public class Term extends GeneticNode {
         List<GeneticNode> operands = new ArrayList<>();
         List<Character> operations = new ArrayList<>();
         GeneticNode lvalue = Factors.getInstance().generate(ctx);
+        while(lvalue.toString().equals("true") || lvalue.toString().equals("false")){
+            lvalue = Factors.getInstance().generate(ctx);
+        }
         operands.add(lvalue);
         int numOfOperations = rng.nextInt(ctx.maxWidth());
         for (int i = 0; i < numOfOperations; i++) {
             operations.add(allowedOperationTypes.get(rng.nextInt(allowedOperationTypes.size())));
-            operands.add(Factors.getInstance().generate(ctx.deeper()));
+            GeneticNode operandToAdd = Factors.getInstance().generate(ctx);
+            while(operandToAdd.toString().equals("true") || operandToAdd.toString().equals("false")){
+                operandToAdd = Factors.getInstance().generate(ctx);
+            }
+            operands.add(operandToAdd);
         }
         return new Term(operands, operations);
     }

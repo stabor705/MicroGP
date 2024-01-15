@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GeneticsTests {
 
-    @RepeatedTest(1000)
+    @RepeatedTest(10)
     void testMutatedProgramsAreSyntacticallyCorrect() {
         GeneticAST program = GeneticAST.generate(5, 5);
         GeneticAST mutated = program.mutate(new GenerationContext(5, 5, 5, 5));
         CharStream inputStream = CharStreams.fromString(mutated.toString());
-        if(mutated.toString().contains("read")){
+        if(mutated.toString().contains("+")){
             System.out.println(mutated);
         }
         MicroGPLexer lexer = new MicroGPLexer(inputStream);

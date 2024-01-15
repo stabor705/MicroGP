@@ -82,6 +82,7 @@ public class InterpreterTests {
     @Test
     void printStatementWorksCorrectlyWithVariables() {
         assertEquals(List.of(789.0), interpret("$1=789; print $1;", List.of(789.0)));
+        assertEquals(List.of(794.0), interpret("$1=789+5; print $1;", List.of(789.0)));
     }
 
     @Test
@@ -103,8 +104,8 @@ public class InterpreterTests {
     }
 
     @Test
-    void shouldNotPrintNullVariable(){
-        assertTrue(interpret("print $2;").isEmpty());
+    void nullVariableShouldBeEqualToZero(){
+        assertEquals(List.of(0.0) , interpret("print $2;"));
     }
 
     @Test

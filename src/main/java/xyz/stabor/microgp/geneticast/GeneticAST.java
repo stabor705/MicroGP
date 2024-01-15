@@ -18,6 +18,10 @@ public class GeneticAST implements Serializable {
         return new GeneticAST(Program.generate(new GenerationContext(height, 5, 2, maxConstVal)));
     }
 
+    public static GeneticAST generate(int height, int maxVars, int maxConstVal) {
+        return new GeneticAST(Program.generate(new GenerationContext(height, maxVars, maxVars, maxConstVal)));
+    }
+
     @Override
     public String toString() {
         return this.root.toString();

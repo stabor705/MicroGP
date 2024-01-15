@@ -9,7 +9,7 @@ public class FirstFunctionTest {
 
     @RepeatedTest(1)
     void testFirstFunctionCalculateFitness(){
-        AdaptationInterface firstFunction = new FirstFunction();
+        AdaptationInterface firstFunction = new Function11A();
         assertEquals(1.0, firstFunction.calculateFitnessForProgram("$1=1; $2=2; print $1; print $2;"));
         assertEquals(1.0, firstFunction.calculateFitnessForProgram("$1=1; $2=2; $3=3; print $1; print $2; print $3;"));
 

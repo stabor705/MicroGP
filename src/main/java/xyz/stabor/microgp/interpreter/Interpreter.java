@@ -36,7 +36,12 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
     }
 
     public static List<Double> interpret(String program, List<Double> input) {
-        MicroGPParser parser = getParser(program);
+        StringBuilder newProgram = new StringBuilder();
+        for(int i = 0; i < input.size(); ++i){
+            newProgram.append("read $").append(i).append("; ");
+        }
+        newProgram.append(program);
+        MicroGPParser parser = getParser(newProgram.toString());
         MicroGPParser.ProgramContext ctx = parser.program();
         Interpreter interpreter = new Interpreter(input);
         interpreter.visitProgram(ctx);
@@ -87,15 +92,15 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
             return Double.parseDouble(ctx.NUMBER().getText());
         }
         if (ctx.TRUE() != null) {
-            return 0.1;
+            return 1.0;
         }
 
         if (ctx.FALSE() != null) {
-            return 0.1;
+            return 0.0;
         }
 
         if (ctx.ID() != null) {
-            symbols.putIfAbsent(ctx.ID().getText(), 0.1);
+            symbols.putIfAbsent(ctx.ID().getText(), 0.0);
             return symbols.get(ctx.ID().getText());
         }
 
