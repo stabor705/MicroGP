@@ -149,7 +149,7 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
         timer++;
         Double data = input.poll();
         if (data == null) {
-            symbols.put(ctx.ID().getText(), 0.1);
+            symbols.put(ctx.ID().getText(), 0.0);
         } else {
             symbols.put(ctx.ID().getText(), data);
         }

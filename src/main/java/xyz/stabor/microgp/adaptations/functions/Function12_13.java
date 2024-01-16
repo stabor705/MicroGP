@@ -9,7 +9,7 @@ import java.util.List;
 public class Function12_13 implements AdaptationInterface {
     public double calculateFitnessForProgram(String program) {
         List<Double> output = Interpreter.interpret(program, input);
-        if (output.isEmpty()) {
+        if (output.isEmpty() || output.contains(Double.NaN) || output.contains(Double.NEGATIVE_INFINITY) || output.contains(Double.POSITIVE_INFINITY)){
             return 0;
         }
         double difference = Math.abs(output.get(0) - targetValue);
@@ -19,8 +19,8 @@ public class Function12_13 implements AdaptationInterface {
         else if(difference < 1.0 && output.size() > 1){
             return 0.99;
         }
-        {
-            return 1.0 / (1.0 + difference);
+        else {
+            return 1.0 / (1.0 + difference + 0.01);
         }
     }
 

@@ -22,11 +22,12 @@ public class Evolve {
             bestProgramIndex = chooseBestFitness(fitnessValues);
             bestProgram = programs.get(bestProgramIndex);
             System.out.println("Generation: " + generation + " BestFit: " + fitnessValues.get(bestProgramIndex));
-            if(fitnessValues.get(bestProgramIndex) >= 1.0){
-                break;
-            }
             List<Integer> selectedIndices = Tournament.selectNewPopulation(fitnessValues, tournamentSize);
             System.out.println(selectedIndices);
+            if(fitnessValues.get(bestProgramIndex) >= 1.0){
+                System.out.println("brek");
+                break;
+            }
             List<GeneticAST> newPopulation = new ArrayList<>();
             for (Integer index : selectedIndices) {
                 GeneticAST individual = SerializationUtils.clone(programs.get(index));

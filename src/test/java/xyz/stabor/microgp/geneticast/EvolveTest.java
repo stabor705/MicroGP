@@ -23,6 +23,14 @@ public class EvolveTest {
         return resultList;
     }
 
+    private List<Double> castListToDouble(List<Integer> list){
+        List<Double> resultList = new ArrayList<>();
+        for(Integer value : list){
+            resultList.add(value.doubleValue());
+        }
+        return resultList;
+    }
+
 
     @Test
     void test11A() {
@@ -120,11 +128,11 @@ public class EvolveTest {
         Integer targetValue = inputValues.stream().mapToInt(Integer::intValue).sum();
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
-        Function12_13 sixthFunction = new Function12_13();
+        Function14 sixthFunction = new Function14();
         sixthFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, sixthFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 0.5) && output.size() == 1);
     }
@@ -141,7 +149,7 @@ public class EvolveTest {
         sixthFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, sixthFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 0.5) && output.size() == 1);
     }
@@ -158,7 +166,7 @@ public class EvolveTest {
         seventhFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, seventhFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
@@ -178,7 +186,7 @@ public class EvolveTest {
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
@@ -198,7 +206,7 @@ public class EvolveTest {
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
@@ -215,7 +223,7 @@ public class EvolveTest {
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
@@ -232,7 +240,7 @@ public class EvolveTest {
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
@@ -251,12 +259,12 @@ public class EvolveTest {
         }
         targetValue /= 10;
         System.out.println(inputValues + " target: " + targetValue);
-        List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue, 10);
+        List<GeneticAST> programs = initializePrograms(200, 5, maxConstValue, 10);
         Function12_13 fitnessFunction = new Function12_13();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         int finalTargetValue = targetValue;
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - finalTargetValue) < 1.0) && output.size() == 1);
@@ -270,19 +278,19 @@ public class EvolveTest {
         List<Integer> inputValues = new ArrayList<>();
         int targetValue = 0;
         int randInt;
-        for(int i =0; i < numOfInputVars; ++i){
+        for(int i = 0; i < numOfInputVars; ++i){
             randInt = rand.nextInt(-100, 100);
             inputValues.add(randInt);
             targetValue += randInt;
         }
         targetValue /= numOfInputVars;
         System.out.println(inputValues + " target: " + targetValue + " numOfInputVars: " + numOfInputVars);
-        List<GeneticAST> programs = initializePrograms(200, 5, maxConstValue, numOfInputVars);
+        List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, numOfInputVars);
         Function12_13 fitnessFunction = new Function12_13();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
         int finalTargetValue = targetValue;
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - finalTargetValue) < 1.0) && output.size() == 1);

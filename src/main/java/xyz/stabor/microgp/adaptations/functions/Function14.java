@@ -9,6 +9,9 @@ import java.util.List;
 public class Function14 implements AdaptationInterface {
     public double calculateFitnessForProgram(String program) {
         List<Double> output = Interpreter.interpret(program, input);
+        if(output.contains(Double.NaN)){
+            return 0;
+        }
         if (output.size() == 1 && Math.abs(output.get(0) - targetValue) < 0.5) {
             return 1.0;
         } else {
