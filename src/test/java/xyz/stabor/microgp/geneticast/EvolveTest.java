@@ -5,6 +5,9 @@ import xyz.stabor.microgp.adaptations.AdaptationInterface;
 import xyz.stabor.microgp.adaptations.functions.*;
 import xyz.stabor.microgp.interpreter.Interpreter;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EvolveTest {
     Random rand = new Random();
+
+    String filename = "EvolveTest.txt";
 
     List<GeneticAST> initializePrograms(int numOfPrograms, int initalHeight, int maxConstValue, int maxVars){
         List<GeneticAST> resultList = new ArrayList<>();
@@ -31,6 +36,19 @@ public class EvolveTest {
         return resultList;
     }
 
+    private void writeToFile(String fileName, String content) {
+        try {
+            FileWriter writer = new FileWriter(fileName, true); // true for append mode
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.write(content);
+            bufferedWriter.newLine();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Test
     void test11A() {
@@ -43,6 +61,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
+        String content = "Output of 1.1.A:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.contains(targetValue));
     }
 
@@ -58,6 +78,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
+        String content = "Output of 1.1.B:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0));
     }
 
@@ -73,6 +95,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
+        String content = "Output of 1.1.C:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0));
     }
 
@@ -87,6 +111,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
+        String content = "Output of 1.1.D:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.contains(targetValue));
     }
 
@@ -102,6 +128,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
+        String content = "Output of 1.1.E:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.contains(targetValue) && output.size() == 1);
     }
 
@@ -117,6 +145,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of());
         System.out.println(output);
+        String content = "Output of 1.1.F:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.contains(targetValue) && output.size() == 1);
     }
 
@@ -134,6 +164,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.2.A:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 0.5) && output.size() == 1);
     }
 
@@ -151,6 +183,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.2.B:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 0.5) && output.size() == 1);
     }
 
@@ -168,6 +202,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.1.C:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
 
@@ -188,6 +224,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.1.D:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
 
@@ -208,6 +246,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.1.E:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
 
@@ -225,6 +265,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.3.A:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
 
@@ -242,6 +284,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.3.B:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - targetValue) < 1.0) && output.size() == 1);
     }
 
@@ -266,6 +310,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.4.A:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         int finalTargetValue = targetValue;
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - finalTargetValue) < 1.0) && output.size() == 1);
     }
@@ -292,6 +338,8 @@ public class EvolveTest {
         System.out.println(bestProgram.toString());
         List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
         System.out.println(output);
+        String content = "Output of 1.4.B:\n" + bestProgram + "\n" + output + "\n";
+        writeToFile(filename, content);
         int finalTargetValue = targetValue;
         assertTrue(output.stream().anyMatch(value -> Math.abs(value - finalTargetValue) < 1.0) && output.size() == 1);
     }
