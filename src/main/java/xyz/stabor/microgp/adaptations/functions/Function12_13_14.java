@@ -6,7 +6,7 @@ import xyz.stabor.microgp.interpreter.Interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Function12_13 implements AdaptationInterface {
+public class Function12_13_14 implements AdaptationInterface {
     public double calculateFitnessForProgram(String program) {
         List<Double> output = Interpreter.interpret(program, input);
         if (output.isEmpty() || output.contains(Double.NaN) || output.contains(Double.NEGATIVE_INFINITY) || output.contains(Double.POSITIVE_INFINITY)){

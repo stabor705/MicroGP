@@ -1,0 +1,28 @@
+Output of testBoolean.:
+{{{read $4;read $3;{print $0;}read $0;read $3;read $2;read $1;read $4;}{read $2;read $3;print 0-0*$0;read $4;read $4;read $1;read $4;read $4;}read $0;read $2;read $1;}}
+[0.0, 0.0]
+
+Output of test27.:
+print $4*955*763*520/938/319*785-385/$2;
+[-2.2456094612279128E-7]
+
+Output of test17.:
+print $1*$1+28/16*88;
+[154.0]
+
+Output of 1.:
+print 0/3*$3*3*$0/$1-$0*1;
+[-1.454535684E9]
+
+Output of 1.:
+{print $1+$0/1;}
+[912.0]
+
+Output of test17.:
+print 52+50/14*95/74;
+[56.584942084942085]
+
+Output of testBoolean.:
+print 0;{read $0;read $0;read $0;read $1;read $0;}print $3;{{read $3;read $0;read $0;}{read $4;read $0;read $3;read $4;read $1;read $0;}read $2;read $0;read $3;{read $2;read $1;print 0;read $1;}read $1;read $3;}$3 = $4*0/0*0-0/0*$2*0-0/0*$3/$1-0/0/0/0/0*0/$1*$3/0;read $4;
+[0.0, 0.0, 0.0]
+

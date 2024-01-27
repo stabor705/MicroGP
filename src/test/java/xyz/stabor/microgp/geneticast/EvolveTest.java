@@ -177,7 +177,7 @@ public class EvolveTest {
         Integer targetValue = inputValues.stream().mapToInt(Integer::intValue).sum();
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
-        Function12_13 sixthFunction = new Function12_13();
+        Function12_13_14 sixthFunction = new Function12_13_14();
         sixthFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, sixthFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -196,7 +196,7 @@ public class EvolveTest {
         Integer targetValue = inputValues.stream().mapToInt(Integer::intValue).sum();
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(3000, 5, maxConstValue, 2);
-        Function12_13 seventhFunction = new Function12_13();
+        Function12_13_14 seventhFunction = new Function12_13_14();
         seventhFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, seventhFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -218,7 +218,7 @@ public class EvolveTest {
                 .orElse(0);
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(2000, 5, maxConstValue, 2);
-        Function12_13 fitnessFunction = new Function12_13();
+        Function12_13_14 fitnessFunction = new Function12_13_14();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -240,7 +240,7 @@ public class EvolveTest {
                 .orElse(0);
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(2000, 5, maxConstValue, 2);
-        Function12_13 fitnessFunction = new Function12_13();
+        Function12_13_14 fitnessFunction = new Function12_13_14();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -259,7 +259,7 @@ public class EvolveTest {
         Integer targetValue = Math.max(inputValues.get(0), inputValues.get(1));
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue, 2);
-        Function12_13 fitnessFunction = new Function12_13();
+        Function12_13_14 fitnessFunction = new Function12_13_14();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -278,7 +278,7 @@ public class EvolveTest {
         Integer targetValue = Math.max(inputValues.get(0), inputValues.get(1));
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(2000, 5, maxConstValue, 2);
-        Function12_13 fitnessFunction = new Function12_13();
+        Function12_13_14 fitnessFunction = new Function12_13_14();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -304,7 +304,7 @@ public class EvolveTest {
         targetValue /= 10;
         System.out.println(inputValues + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(200, 5, maxConstValue, 10);
-        Function12_13 fitnessFunction = new Function12_13();
+        Function12_13_14 fitnessFunction = new Function12_13_14();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -332,7 +332,7 @@ public class EvolveTest {
         targetValue /= numOfInputVars;
         System.out.println(inputValues + " target: " + targetValue + " numOfInputVars: " + numOfInputVars);
         List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, numOfInputVars);
-        Function12_13 fitnessFunction = new Function12_13();
+        Function12_13_14 fitnessFunction = new Function12_13_14();
         fitnessFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
