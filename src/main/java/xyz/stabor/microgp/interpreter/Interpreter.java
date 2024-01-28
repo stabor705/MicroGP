@@ -1,7 +1,11 @@
 package xyz.stabor.microgp.interpreter;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import xyz.stabor.microgp.MicroGPBaseVisitor;
+import xyz.stabor.microgp.MicroGPLexer;
 import xyz.stabor.microgp.MicroGPParser;
 
 import java.util.*;
@@ -21,6 +25,27 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
     public Interpreter(List<Double> input, int maxTime) {
         this.input = new LinkedList<>(input);
         this.maxTime = maxTime;
+    }
+
+    private static MicroGPParser getParser(String program) {
+        CharStream stream = CharStreams.fromString(program);
+        MicroGPLexer lexer = new MicroGPLexer(stream);
+        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+        MicroGPParser parser = new MicroGPParser(commonTokenStream);
+        return parser;
+    }
+
+    public static List<Double> interpret(String program, List<Double> input) {
+        StringBuilder newProgram = new StringBuilder();
+        for(int i = 0; i < input.size(); ++i){
+            newProgram.append("read $").append(i).append("; ");
+        }
+        newProgram.append(program);
+        MicroGPParser parser = getParser(newProgram.toString());
+        MicroGPParser.ProgramContext ctx = parser.program();
+        Interpreter interpreter = new Interpreter(input);
+        interpreter.visitProgram(ctx);
+        return interpreter.readOutput();
     }
 
     @Override
@@ -135,7 +160,9 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
     public Double visitPrintStatement(MicroGPParser.PrintStatementContext ctx) {
         timer++;
         Double result = visitExpression(ctx.expression());
-        output.add(result);
+        if(result != 0.1){
+            output.add(result);
+        }
         return result;
     }
 
@@ -189,7 +216,6 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
 
     public List<Double> readOutput() {
         List<Double> out = new ArrayList<>(output);
-        output.clear();
         return out;
     }
 

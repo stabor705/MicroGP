@@ -14,7 +14,7 @@ public class CodeGenerationTests {
 
     @RepeatedTest(1000)
     void testGeneratedProgramsAreMostProbablySyntacticallyCorrect() {
-        GeneticNode program = Program.generate(new GenerationContext(10, 5, 5));
+        GeneticNode program = Program.generate(new GenerationContext(10, 5, 5, 5));
         CharStream inputStream = CharStreams.fromString(program.toString());
         MicroGPLexer lexer = new MicroGPLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);

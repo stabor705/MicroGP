@@ -80,6 +80,12 @@ public class InterpreterTests {
     }
 
     @Test
+    void printStatementWorksCorrectlyWithVariables() {
+        assertEquals(List.of(789.0), interpret("$1=789; print $1;", List.of(789.0)));
+        assertEquals(List.of(794.0), interpret("$1=789+5; print $1;", List.of(789.0)));
+    }
+
+    @Test
     void ifStatementWorksCorrectly() {
         assertEquals(List.of(1.0), interpret("if 2 + 2 == 4 { print 1.0; }"));
         assertEquals(List.of(), interpret("if 2 + 2 == 5 { print 1.0; }"));
@@ -97,4 +103,16 @@ public class InterpreterTests {
         String program = "if (true) { print 123 }";
     }
 
+    @Test
+    void nullVariableShouldBeEqualToZero(){
+        assertEquals(List.of(0.0) , interpret("print $2;"));
+    }
+
+    @Test
+    void shouldNotImplicitlyCastBooleanToDouble(){
+        assertTrue(interpret("print true; print false;").isEmpty());
+    }
+
 }
+
+

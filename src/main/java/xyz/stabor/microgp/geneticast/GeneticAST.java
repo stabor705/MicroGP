@@ -14,8 +14,12 @@ public class GeneticAST implements Serializable {
         this.root = root;
     }
 
-    public static GeneticAST generate(int height) {
-        return new GeneticAST(Program.generate(new GenerationContext(height, 5, 5)));
+    public static GeneticAST generate(int height, int maxConstVal) {
+        return new GeneticAST(Program.generate(new GenerationContext(height, 5, 2, maxConstVal)));
+    }
+
+    public static GeneticAST generate(int height, int maxVars, int maxConstVal) {
+        return new GeneticAST(Program.generate(new GenerationContext(height, maxVars, maxVars, maxConstVal)));
     }
 
     @Override
@@ -27,10 +31,11 @@ public class GeneticAST implements Serializable {
         this.root = program;
     }
 
-    public GeneticAST mutated(GenerationContext ctx) {
+    public GeneticAST mutate(GenerationContext ctx) {
         GeneticAST ast = SerializationUtils.clone(this);
+//        System.out.println("mutate: " + ast.toString());
         GeneticNode mutatedNode = ast.selectRandomNode();
-        GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight(), ctx.maxWidth(), ctx.maxVars()));
+        GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight(), ctx.maxWidth(), ctx.maxVars(), ctx.maxConstValue()));
         ast.replaceNode(mutatedNode, newNode);
         return ast;
     }
@@ -63,7 +68,13 @@ public class GeneticAST implements Serializable {
         }
 
         GeneticNode parent = node.parent;
+        if(parent == null){
+            return;
+        }
         int mutatedNodeIdx = parent.children.indexOf(node);
+        if(mutatedNodeIdx < 0) {
+            return;
+        }
         parent.children.remove(node);
         parent.children.add(mutatedNodeIdx, newNode);
     }

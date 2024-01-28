@@ -1,15 +1,21 @@
 package xyz.stabor.microgp.adaptations;
 
+import xyz.stabor.microgp.geneticast.GeneticAST;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public interface AdaptationInterface {
 
-    Double execute(List<Double> inputVector);
-    default double calculateFitness(List<Double> inputVector, List<Double> outputVector){
-        double result = 0;
-        for(int i = 0; i < inputVector.size(); ++i){
-            result += Math.pow(inputVector.get(i) - outputVector.get(i), 2);
+    double calculateFitnessForProgram(String program);
+
+    default List<Double> calculateFitness(List<GeneticAST> programs){
+        List<Double> fitnessValues = new ArrayList<>();
+        for (GeneticAST program : programs) {
+            double fitness = this.calculateFitnessForProgram(program.toString());
+            fitnessValues.add(fitness);
         }
-        return Math.sqrt(result);
+        return fitnessValues;
     }
+
 }

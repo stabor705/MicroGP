@@ -50,13 +50,15 @@ public class NodeTypeUnion {
         Random rng = new Random();
         List<Class<?>> permissibleNodeTypeClasses = nodeTypeClasses.stream()
                 .filter(nodeTypeClass -> getMinHeight(nodeTypeClass) <= ctx.remainingHeight()).toList();
-        int roll = rng.nextInt(permissibleNodeTypeClasses.size());
-        Class<?> nodeTypeClass = permissibleNodeTypeClasses.get(roll);
-        try {
-            Method generationMethod = nodeTypeClass.getMethod("generate", GenerationContext.class);
-            return (GeneticNode)generationMethod.invoke(null, ctx);
-        } catch (Exception e) {
-            System.err.println("Could not instantiate random node for type" + nodeTypeClass.getName() + ": " + e);
+        if(! permissibleNodeTypeClasses.isEmpty()){
+            int roll = rng.nextInt(permissibleNodeTypeClasses.size());
+            Class<?> nodeTypeClass = permissibleNodeTypeClasses.get(roll);
+            try {
+                Method generationMethod = nodeTypeClass.getMethod("generate", GenerationContext.class);
+                return (GeneticNode)generationMethod.invoke(null, ctx);
+            } catch (Exception e) {
+                System.err.println("Could not instantiate random node for type" + nodeTypeClass.getName() + ": " + e);
+            }
         }
         return null;
     }
