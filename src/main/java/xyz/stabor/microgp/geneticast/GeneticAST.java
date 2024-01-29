@@ -10,12 +10,8 @@ public class GeneticAST implements Serializable {
     private GeneticNode root;
     private Random rng = new Random();
 
-    private GeneticAST(Program root) {
+    public GeneticAST(Program root) {
         this.root = root;
-    }
-
-    public static GeneticAST generate(int height, int maxConstVal) {
-        return new GeneticAST(Program.generate(new GenerationContext(height, 5, 2, maxConstVal)));
     }
 
     public static GeneticAST generate(int height, int maxVars, int maxConstVal) {
@@ -27,13 +23,8 @@ public class GeneticAST implements Serializable {
         return this.root.toString();
     }
 
-    private GeneticAST(GeneticNode program) {
-        this.root = program;
-    }
-
     public GeneticAST mutate(GenerationContext ctx) {
         GeneticAST ast = SerializationUtils.clone(this);
-//        System.out.println("mutate: " + ast.toString());
         GeneticNode mutatedNode = ast.selectRandomNode();
         GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight(), ctx.maxWidth(), ctx.maxVars(), ctx.maxConstValue()));
         ast.replaceNode(mutatedNode, newNode);
@@ -55,7 +46,6 @@ public class GeneticAST implements Serializable {
         GeneticNode nodeB = other.selectRandomNode();
         if (Genetics.canBeCrossed(nodeA, nodeB)) {
             replaceNode(nodeA, nodeB);
-            replaceNode(nodeB, nodeA);
             return true;
         }
         return false;
@@ -68,15 +58,14 @@ public class GeneticAST implements Serializable {
         }
 
         GeneticNode parent = node.parent;
-        if(parent == null){
+        if (parent == null){
             return;
         }
-        int mutatedNodeIdx = parent.children.indexOf(node);
-        if(mutatedNodeIdx < 0) {
+        int crossedNodeIdx = parent.children.indexOf(node);
+        if (crossedNodeIdx < 0) {
             return;
         }
-        parent.children.remove(node);
-        parent.children.add(mutatedNodeIdx, newNode);
+        parent.children.set(crossedNodeIdx, newNode);
     }
 
     private GeneticNode selectRandomNode() {
