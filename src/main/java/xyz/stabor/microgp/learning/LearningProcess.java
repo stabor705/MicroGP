@@ -23,32 +23,30 @@ public class LearningProcess {
     private List<List<Double>> inputs;
     private List<List<Double>> expectedOutputs;
     private FitnessCalculator fitnessCalculator;
+    private GenerationContext generationContext;
+    private int initialPopSize;
 
     private static double CROSSOVER_PROBABILITY = 0.4;
     private static double MUTATION_PROBABILITY = 0.2;
     private static int TOURNAMENT_SIZE = 2;
 
-    private int initialPopSize = 50;
-    private GenerationContext generationContext = new GenerationContext(5, 10, 10, 10_000);
 
-    public LearningProcess(List<List<Double>> inputs, List<List<Double>> expectedOutputs, FitnessCalculator fitnessCalculator) {
-        assert inputs.size() == expectedOutputs.size();
-
-        this.inputs = inputs;
-        this.expectedOutputs = expectedOutputs;
-        this.fitnessCalculator = fitnessCalculator;
-    }
-
-    public Report run(int numOfGenerations) {
+    public Report run(int maxGenerations, double maxBestFitness) {
         List<GeneticAST> population = generatePopulation(initialPopSize);
         Report report = new Report();
 
-        for (int i = 0; i < numOfGenerations; i++) {
-            List<GeneticAST> selected = select(population);
-            population = modify(selected);
-            appendMetrics(population, report);
-        }
+        for (int i = 0; i < maxGenerations; i++) {
+            System.out.println("Generation " + i);
+            List<Double> scores = scorePopulation(population);
+            List<GeneticAST> selected = select(population, scores);
+            appendMetrics(population, report, scores);
 
+            if (report.records.get(report.records.size() - 1).bestFitness() >= maxBestFitness) {
+                break;
+            }
+
+            population = modify(selected);
+        }
         return report;
     }
 
@@ -60,15 +58,11 @@ public class LearningProcess {
         return population.stream().map(GeneticAST::new).toList();
     }
 
-    private List<GeneticAST> select(List<GeneticAST> population) {
-        List<Double> scores = new ArrayList<>();
-        for (GeneticAST individual : population) {
-            scores.add(score(individual));
-        }
+    private List<GeneticAST> select(List<GeneticAST> population, List<Double> scores) {
         List<Integer> newPopulationIndices = Tournament.selectNewPopulation(scores, TOURNAMENT_SIZE);
         List<GeneticAST> newPopulation = new ArrayList<>();
-        for (int i = 0; i < newPopulationIndices.size(); i++) {
-            newPopulation.add(population.get(i));
+        for (int idx : newPopulationIndices) {
+            newPopulation.add(population.get(idx));
         }
         return newPopulation;
     }
@@ -82,7 +76,7 @@ public class LearningProcess {
                 newPopulation.add(population.get(i).mutate(generationContext));
             } else if (rng.nextFloat() <= CROSSOVER_PROBABILITY) {
                 int offset = 0;
-                if (rng.nextBoolean() && i > 0) {
+                if ((rng.nextBoolean() && i < population.size() - 1) || i < 2) {
                     offset = rng.nextInt(1, population.size() - i);
                 } else {
                     offset = -rng.nextInt(1, i);
@@ -95,11 +89,11 @@ public class LearningProcess {
         return newPopulation;
     }
 
-    private void appendMetrics(List<GeneticAST> population, Report report) {
-        List<Double> scores = scorePopulation(population);
+    private void appendMetrics(List<GeneticAST> population, Report report, List<Double> scores) {
         double avgFitness = scores.stream().mapToDouble(e -> e).average().getAsDouble();
-        double bestFitness = scores.stream().mapToDouble(e -> e).min().getAsDouble();
-        GeneticAST bestIndividual = population.get(Collections.binarySearch(scores, bestFitness));
+        double bestFitness = Collections.max(scores);
+        GeneticAST bestIndividual = population.get(scores.indexOf(bestFitness));
+        System.out.printf("Avg Fitness: %f, BestFitness: %f%n", avgFitness, bestFitness);
         report.appendRecord(avgFitness, bestFitness);
         report.setBestIndividual(bestIndividual);
     }
