@@ -52,10 +52,10 @@ public class EvolveTest {
 
     @Test
     void test11A() {
-        int numOfGenerations = 10;
+        int numOfGenerations = 30;
         double targetValue = 1.0;
         int maxConstValue = 5;
-        List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue, 2);
+        List<GeneticAST> programs = initializePrograms(50, 5, maxConstValue, 2);
         AdaptationInterface fitnessFunction = new Function11A();
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -68,7 +68,7 @@ public class EvolveTest {
 
     @Test
     void test11B() {
-        int numOfGenerations = 10;
+        int numOfGenerations = 15;
         double targetValue = 789.0;
         int maxConstValue = 100;
         List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
@@ -85,7 +85,7 @@ public class EvolveTest {
 
     @Test
     void test11C() {
-        int numOfGenerations = 10;
+        int numOfGenerations = 15;
         double targetValue = 31415.0;
         int maxConstValue = 1000;
         List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
@@ -105,7 +105,7 @@ public class EvolveTest {
         int numOfGenerations = 10;
         double targetValue = 1.0;
         int maxConstValue = 5;
-        List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
+        List<GeneticAST> programs = initializePrograms(50, 5, maxConstValue, 2);
         AdaptationInterface fitnessFunction = new Function11D();
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
@@ -120,7 +120,7 @@ public class EvolveTest {
     void test11E() {
         int numOfGenerations = 10;
         double targetValue = 789.0;
-        int maxConstValue = 10;
+        int maxConstValue = 100;
         List<GeneticAST> programs = initializePrograms(2000, 5, maxConstValue, 2);
         Function11EF fitnessFunction = new Function11EF();
         fitnessFunction.initializeTargetValue(targetValue);
@@ -138,7 +138,7 @@ public class EvolveTest {
         int numOfGenerations = 10;
         double targetValue = 1.0;
         int maxConstValue = 5;
-        List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue, 2);
+        List<GeneticAST> programs = initializePrograms(20, 5, maxConstValue, 2);
         Function11EF fitnessFunction = new Function11EF();
         fitnessFunction.initializeTargetValue(targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
@@ -157,7 +157,7 @@ public class EvolveTest {
         List<Integer> inputValues = new ArrayList<>(Arrays.asList(rand.nextInt(10), rand.nextInt(10)));
         Integer targetValue = inputValues.stream().mapToInt(Integer::intValue).sum();
         System.out.println(inputValues + " target: " + targetValue);
-        List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
+        List<GeneticAST> programs = initializePrograms(100, 5, maxConstValue, 2);
         Function14 sixthFunction = new Function14();
         sixthFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, sixthFunction, maxConstValue);
@@ -195,7 +195,7 @@ public class EvolveTest {
         List<Integer> inputValues = new ArrayList<>(Arrays.asList(rand.nextInt(-9999, 9999), rand.nextInt(-9999, 9999)));
         Integer targetValue = inputValues.stream().mapToInt(Integer::intValue).sum();
         System.out.println(inputValues + " target: " + targetValue);
-        List<GeneticAST> programs = initializePrograms(3000, 5, maxConstValue, 2);
+        List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
         Function12_13_14 seventhFunction = new Function12_13_14();
         seventhFunction.readInput(inputValues, targetValue);
         GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, seventhFunction, maxConstValue);

@@ -1,6 +1,7 @@
 package xyz.stabor.microgp.geneticast;
 
 import org.junit.jupiter.api.Test;
+import xyz.stabor.microgp.adaptations.functions.Benchmark1;
 import xyz.stabor.microgp.adaptations.functions.Function11BC;
 import xyz.stabor.microgp.adaptations.functions.Function12_13_14;
 import xyz.stabor.microgp.adaptations.functions.FunctionBoolean;
@@ -53,15 +54,16 @@ public class BenchmarkTest {
     void test1() {
         int numOfGenerations = 10;
         int maxConstValue = 5;
-        List<Integer> inputValues = new ArrayList<>(Arrays.asList(rand.nextInt(1000), rand.nextInt(1000)));
-        Integer targetValue = inputValues.stream().mapToInt(Integer::intValue).sum();
-        System.out.println(inputValues + " target: " + targetValue);
+        Double intputD = rand.nextDouble(1000);
+        Integer intputI = rand.nextInt(1000);
+        Double targetValue = intputD + intputI;
+        System.out.println(intputD + " " + intputI + " target: " + targetValue);
         List<GeneticAST> programs = initializePrograms(1000, 5, maxConstValue, 2);
-        Function12_13_14 sixthFunction = new Function12_13_14();
-        sixthFunction.readInput(inputValues, targetValue);
-        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, sixthFunction, maxConstValue);
+        Benchmark1 fitnessFunction = new Benchmark1();
+        fitnessFunction.readInput(intputD, intputI, targetValue);
+        GeneticAST bestProgram = Evolve.evolve(programs, numOfGenerations, fitnessFunction, maxConstValue);
         System.out.println(bestProgram.toString());
-        List<Double> output = Interpreter.interpret(bestProgram.toString(), castListToDouble(inputValues));
+        List<Double> output = Interpreter.interpret(bestProgram.toString(), List.of(intputD, intputI.doubleValue()));
         System.out.println(output);
         String content = "Output of 1.:\n" + bestProgram + "\n" + output + "\n";
         writeToFile(filename, content);
@@ -93,7 +95,7 @@ public class BenchmarkTest {
 
     @Test
     void test27() {
-        int numOfGenerations = 100;
+        int numOfGenerations = 20;
         int maxConstValue = 1000;
         List<Integer> inputValues = new ArrayList<>(Arrays.asList(rand.nextInt(), rand.nextInt(), rand.nextInt()));
         Collections.sort(inputValues);
