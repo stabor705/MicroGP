@@ -46,9 +46,9 @@ public class Evolve {
                 int partnerIndex = rng.nextInt(programs.size
                         ());
                 GeneticAST partner = SerializationUtils.clone(programs.get(partnerIndex));
-                individual = individual.crossover(partner);
+                individual.crossover(partner, new GenerationContext(GEN_CONTEXT_DEPTH, GEN_CONTEXT_WIDTH, GEN_CONTEXT_VARS, maxConstVal));
             } else {
-                individual = individual.mutate(new GenerationContext(GEN_CONTEXT_DEPTH, GEN_CONTEXT_WIDTH, GEN_CONTEXT_VARS, maxConstVal));
+                individual.mutate(new GenerationContext(GEN_CONTEXT_DEPTH, GEN_CONTEXT_WIDTH, GEN_CONTEXT_VARS, maxConstVal));
             }
             newPopulation.add(individual);
         }

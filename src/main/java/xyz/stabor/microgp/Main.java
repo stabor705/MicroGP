@@ -10,29 +10,25 @@ import xyz.stabor.microgp.geneticast.variables.Program;
 import xyz.stabor.microgp.MicroGPLexer;
 import xyz.stabor.microgp.MicroGPParser;
 import xyz.stabor.microgp.interpreter.Interpreter;
+import xyz.stabor.microgp.interpreter.InterpreterUtils;
 
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        GeneticNode program = Program.generate(new GenerationContext(5, 2, 5, 5));
-        System.out.println(program);
-        CharStream stream = CharStreams.fromString(program.toString());
-        MicroGPLexer lexer = new MicroGPLexer(stream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        MicroGPParser parser = new MicroGPParser(commonTokenStream);
-        MicroGPParser.ProgramContext ctx = parser.program();
+        List<Double> output = InterpreterUtils.runProgram("$1 = 1/$1*$1*7;read $1;print 5/2/$1-4*$0/$1*$1+$2/$1+2/2;", List.of());
+        System.out.println(output);
+
     }
 
     static void serializeAndDeserialize() {
         String programName = "example.microgp";
         String serializedName = "exampleast.bin";
-
         GeneticNode program = Program.generate(new GenerationContext(5, 5, 5, 5));
-
         try {
             FileWriter fileWriter = new FileWriter(programName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);

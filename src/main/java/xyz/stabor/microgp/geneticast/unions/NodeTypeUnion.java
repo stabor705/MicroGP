@@ -50,7 +50,7 @@ public class NodeTypeUnion {
         Random rng = new Random();
         List<Class<?>> permissibleNodeTypeClasses = nodeTypeClasses.stream()
                 .filter(nodeTypeClass -> getMinHeight(nodeTypeClass) <= ctx.remainingHeight()).toList();
-        if(! permissibleNodeTypeClasses.isEmpty()){
+        if(!permissibleNodeTypeClasses.isEmpty()){
             int roll = rng.nextInt(permissibleNodeTypeClasses.size());
             Class<?> nodeTypeClass = permissibleNodeTypeClasses.get(roll);
             try {

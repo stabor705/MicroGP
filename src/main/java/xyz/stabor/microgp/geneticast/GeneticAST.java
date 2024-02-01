@@ -23,27 +23,29 @@ public class GeneticAST implements Serializable {
         return this.root.toString();
     }
 
-    public GeneticAST mutate(GenerationContext ctx) {
-        GeneticAST ast = SerializationUtils.clone(this);
-        GeneticNode mutatedNode = ast.selectRandomNode();
+    public void mutate(GenerationContext ctx) {
+        GeneticNode mutatedNode = selectRandomNode();
         GeneticNode newNode = Genetics.generateReplacingNode(mutatedNode, new GenerationContext(mutatedNode.getHeight(), ctx.maxWidth(), ctx.maxVars(), ctx.maxConstValue()));
-        ast.replaceNode(mutatedNode, newNode);
-        return ast;
+        if (newNode == null) {
+            return;
+        }
+        replaceNode(mutatedNode, newNode);
     }
 
-    public GeneticAST crossover(GeneticAST other) {
-        GeneticAST ast = SerializationUtils.clone(this);
-        for (int i = 0; i < 100; i++)  {
-            if (ast.attemptCrossover(other)) {
-                return ast;
+    public void crossover(GeneticAST other, GenerationContext ctx) {
+        for (int i = 0; i < 10; i++)  {
+            if (attemptCrossover(other, ctx)) {
+                return;
             }
         }
-        return null;
     }
 
-    private boolean attemptCrossover(GeneticAST other) {
+    private boolean attemptCrossover(GeneticAST other, GenerationContext ctx) {
         GeneticNode nodeA = selectRandomNode();
         GeneticNode nodeB = other.selectRandomNode();
+        if (nodeB.getHeight() - nodeA.getHeight() > ctx.maxDepth() - root.getHeight()) {
+            return false;
+        }
         if (Genetics.canBeCrossed(nodeA, nodeB)) {
             replaceNode(nodeA, nodeB);
             return true;
@@ -59,6 +61,9 @@ public class GeneticAST implements Serializable {
 
         GeneticNode parent = node.parent;
         if (parent == null){
+            return;
+        }
+        if (parent == newNode) {
             return;
         }
         int crossedNodeIdx = parent.children.indexOf(node);

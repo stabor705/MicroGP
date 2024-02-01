@@ -21,11 +21,15 @@ public abstract class GeneticNode implements Serializable {
     }
 
     public int getNumberOfNodes() {
-        return 1 + getNumberOfDescendants();
-    }
-
-    public int getNumberOfDescendants() {
-        return this.children.stream().mapToInt(GeneticNode::getNumberOfNodes).sum();
+        Queue<GeneticNode> queue = new LinkedList<>();
+        int count = 0;
+        queue.add(this);
+        while (!queue.isEmpty()) {
+            GeneticNode node = queue.remove();
+            count += 1;
+            queue.addAll(node.children);
+        }
+        return count;
     }
 
     public GeneticNode getNthNode(int n) {

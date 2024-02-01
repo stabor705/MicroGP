@@ -25,13 +25,15 @@ public class LearningProcess {
     private FitnessCalculator fitnessCalculator;
     private GenerationContext generationContext;
     private int initialPopSize;
+    private int maxGenerations;
+    double maxBestFitness;
 
     private static double CROSSOVER_PROBABILITY = 0.4;
-    private static double MUTATION_PROBABILITY = 0.2;
+    private static double MUTATION_PROBABILITY = 0.5;
     private static int TOURNAMENT_SIZE = 2;
 
 
-    public Report run(int maxGenerations, double maxBestFitness) {
+    public Report run() {
         List<GeneticAST> population = generatePopulation(initialPopSize);
         Report report = new Report();
 
@@ -45,7 +47,7 @@ public class LearningProcess {
                 break;
             }
 
-            population = modify(selected);
+            modify(selected);
         }
         return report;
     }
@@ -59,7 +61,9 @@ public class LearningProcess {
     }
 
     private List<GeneticAST> select(List<GeneticAST> population, List<Double> scores) {
-        List<Integer> newPopulationIndices = Tournament.selectNewPopulation(scores, TOURNAMENT_SIZE);
+        double min = Collections.min(scores);
+        List<Double> scoresNormalized = scores.stream().map(score -> (score / min)).toList();
+        List<Integer> newPopulationIndices = Tournament.selectNewPopulation(scoresNormalized, TOURNAMENT_SIZE);
         List<GeneticAST> newPopulation = new ArrayList<>();
         for (int idx : newPopulationIndices) {
             newPopulation.add(population.get(idx));
@@ -67,26 +71,23 @@ public class LearningProcess {
         return newPopulation;
     }
 
-    private List<GeneticAST> modify(List<GeneticAST> population) {
-        List<GeneticAST> newPopulation = new ArrayList<>(population.size());
+    private void modify(List<GeneticAST> population) {
         Random rng = new Random();
 
         for (int i = 0; i < population.size(); i++) {
             if (rng.nextFloat() <= MUTATION_PROBABILITY) {
-                newPopulation.add(population.get(i).mutate(generationContext));
-            } else if (rng.nextFloat() <= CROSSOVER_PROBABILITY) {
+                population.get(i).mutate(generationContext);
+            }
+            if (rng.nextFloat() <= CROSSOVER_PROBABILITY) {
                 int offset = 0;
                 if ((rng.nextBoolean() && i < population.size() - 1) || i < 2) {
                     offset = rng.nextInt(1, population.size() - i);
                 } else {
                     offset = -rng.nextInt(1, i);
                 }
-                newPopulation.add(population.get(i).crossover(population.get(i + offset)));
-            } else {
-                newPopulation.add(population.get(i));
+                population.get(i).crossover(population.get(i + offset), generationContext);
             }
         }
-        return newPopulation;
     }
 
     private void appendMetrics(List<GeneticAST> population, Report report, List<Double> scores) {
@@ -106,11 +107,13 @@ public class LearningProcess {
         double sum = 0;
         for (int i = 0; i < inputs.size(); i++) {
             List<Double> output = runProgram(program, inputs.get(i));
+            while (output.size() < expectedOutputs.size()) {
+                output.add(0.0);
+            }
             double fitness = fitnessCalculator.calculateFitness(expectedOutputs.get(i), output);
             sum += fitness;
         }
-        double avgFitness = sum / inputs.size();
-        return avgFitness;
+        return sum;
     }
 
     private List<Double> runProgram(GeneticAST program, List<Double> input) {

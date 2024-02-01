@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'antlr'
     id 'idea'
+    id 'application'
 }
 
 group = 'xyz.stabor'
@@ -9,6 +10,14 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+ext {
+    javaMainClass = "xyz.stabor.microgp.report.BasicTests"
+}
+
+application {
+    mainClassName = javaMainClass
 }
 
 dependencies {

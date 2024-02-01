@@ -80,7 +80,11 @@ public class Interpreter extends MicroGPBaseVisitor<Double> {
             if (operator.equals("*")) {
                 result *= operand;
             } else {
-                result /= operand;
+                if (operand == 0) {
+                    result = 0;
+                } else {
+                    result /= operand;
+                }
             }
         }
         return result;

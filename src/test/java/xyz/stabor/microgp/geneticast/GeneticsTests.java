@@ -16,10 +16,10 @@ public class GeneticsTests {
     void testMutatedProgramsAreSyntacticallyCorrect() {
         Program program = Program.generate(new GenerationContext(5, 10, 10, 1000));
         GeneticAST ast = new GeneticAST(program);
-        GeneticAST mutated = ast.mutate(new GenerationContext(5, 10, 10, 1000));
-        CharStream inputStream = CharStreams.fromString(mutated.toString());
-        if(mutated.toString().contains("+")){
-            System.out.println(mutated);
+        ast.mutate(new GenerationContext(5, 10, 10, 1000));
+        CharStream inputStream = CharStreams.fromString(ast.toString());
+        if(ast.toString().contains("+")){
+            System.out.println(ast);
         }
         MicroGPLexer lexer = new MicroGPLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
@@ -34,9 +34,9 @@ public class GeneticsTests {
         Program programB = Program.generate(new GenerationContext(5, 10, 10, 1000));
         GeneticAST astA = new GeneticAST(programA);
         GeneticAST astB = new GeneticAST(programB);
-        GeneticAST crossed = astA.crossover(astB);
+        astA.crossover(astB, new GenerationContext(5, 10, 10, 1000));
 
-        CharStream inputStream = CharStreams.fromString(crossed.toString());
+        CharStream inputStream = CharStreams.fromString(astA.toString());
         MicroGPLexer lexer = new MicroGPLexer(inputStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         MicroGPParser parser = new MicroGPParser(tokenStream);
