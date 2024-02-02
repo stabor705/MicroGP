@@ -30,7 +30,7 @@ public class LearningProcess {
 
     private static double CROSSOVER_PROBABILITY = 0.4;
     private static double MUTATION_PROBABILITY = 0.5;
-    private static int TOURNAMENT_SIZE = 2;
+    private static int TOURNAMENT_SIZE = 4;
 
 
     public Report run() {
